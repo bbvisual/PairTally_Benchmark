@@ -1,0 +1,27 @@
+# CountGD Requirements
+# Based on original CountGD repository requirements
+
+torch>=1.9.0
+torchvision>=0.10.0
+torchaudio>=0.9.0
+numpy
+scipy
+matplotlib
+pillow
+opencv-python
+transformers
+tokenizers
+timm
+pycocotools
+supervision
+gradio
+huggingface_hub
+accelerate
+bitsandbytes
+xformers
+segment-anything @ git+https://github.com/facebookresearch/segment-anything.git
+
+# Additional dependencies for DICTA25 evaluation
+tqdm
+json5
+argparse

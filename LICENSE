@@ -1,0 +1,91 @@
+MIT License
+
+Copyright (c) 2025 DICTA25 Dataset Authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+================================================================================
+
+THIRD-PARTY LICENSES
+
+This repository includes evaluation code for several third-party models.
+Each model has its own license terms:
+
+1. CountGD (https://github.com/niki-amini-naieni/CountGD)
+   - License: Check original repository for license terms
+
+2. DAVE (https://github.com/jerpelhan/DAVE)
+   - License: Check original repository for license terms
+
+3. GeCo (https://github.com/jerpelhan/GeCo)
+   - License: Check original repository for license terms
+
+4. LearningToCountEverything (https://github.com/cvlab-stonybrook/LearningToCountEverything)
+   - License: Check original repository for license terms
+
+5. LOCA
+   - License: Check original repository for license terms
+
+6. Vision-Language Models:
+   - Qwen2.5-VL: Apache 2.0 License
+   - InternVL3: MIT License
+   - Llama Vision: Custom License (requires Meta approval)
+   - Ovis2: Apache 2.0 License
+
+Please respect the individual license terms of each model when using this code.
+
+================================================================================
+
+DATASET LICENSE
+
+The DICTA25 dataset is released under Creative Commons Attribution 4.0 
+International License (CC BY 4.0).
+
+You are free to:
+- Share: copy and redistribute the material in any medium or format
+- Adapt: remix, transform, and build upon the material for any purpose
+
+Under the following terms:
+- Attribution: You must give appropriate credit, provide a link to the license,
+  and indicate if changes were made.
+
+For more details, see: https://creativecommons.org/licenses/by/4.0/
+
+================================================================================
+
+CITATION
+
+If you use this code or dataset in your research, please cite:
+
+@inproceedings{your-name2025dicta25,
+  title={Can Current AI Models Count What We Mean, Not What They See? A Benchmark and Systematic Evaluation},
+  author={Your Name and Co-authors},
+  booktitle={Proceedings of the International Conference on Digital Image Computing: Techniques and Applications (DICTA)},
+  year={2025}
+}
+
+Additionally, please cite the original papers for any models you use:
+
+- CountGD: Amini-Naieni et al., NeurIPS 2024
+- DAVE: Pelhan et al., CVPR 2024
+- GeCo: Pelhan et al., NeurIPS 2024
+- LearningToCountEverything: Ranjan et al., CVPR 2021
+- And respective VLM papers
+
+================================================================================

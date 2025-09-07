@@ -1,0 +1,32 @@
+# VLMs (Vision-Language Models) Requirements
+# Common requirements for Qwen2.5-VL, InternVL3, Llama Vision, Ovis2
+
+torch>=2.0.0
+torchvision>=0.15.0
+transformers>=4.40.0
+accelerate
+bitsandbytes
+pillow
+numpy
+scipy
+matplotlib
+tqdm
+datasets
+tokenizers
+sentencepiece
+protobuf
+requests
+huggingface_hub
+
+# Model-specific requirements
+# Qwen2.5-VL
+qwen-vl-utils
+
+# InternVL
+timm
+
+# For evaluation and analysis
+pandas
+scikit-learn
+seaborn
+tabulate
