@@ -2,13 +2,12 @@
 
 **A Benchmark and Systematic Evaluation**
 
-[![Paper](https://img.shields.io/badge/Paper-DICTA2025-blue)](https://your-paper-link-here)
-[![Dataset](https://img.shields.io/badge/Dataset-PairTally-green)](https://your-dataset-link-here)
-[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+[![Paper](https://img.shields.io/badge/Paper-DICTA2025-blue)](...)
+[![Dataset](https://img.shields.io/badge/Dataset-PairTally-green)](https://drive.google.com/file/d/1TnenXS4yFicjo81NnmClfzgc8ltmmeBv/view?usp=drive_link)
 
 ## Overview
 
-This repository contains the code and data for our DICTA 2025 paper "Can Current AI Models Count What We Mean, Not What They See? A Benchmark and Systematic Evaluation". We introduce **PairTally**, a benchmark dataset specifically designed to evaluate fine-grained visual counting, and systematically evaluate 10 state-of-the-art models across different counting paradigms.
+This repository contains the code and data for our DICTA 2025 paper ["Can Current AI Models Count What We Mean, Not What They See? A Benchmark and Systematic Evaluation"](url). We introduce **PairTally**, a benchmark dataset specifically designed to evaluate fine-grained visual counting, and systematically evaluate 10 state-of-the-art models across different counting paradigms.
 
 ### Key Contributions
 
