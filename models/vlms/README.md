@@ -96,7 +96,7 @@ huggingface-cli login
 conda activate qwen2_5vl
 python evaluate_DICTA25_qwen2_5vl_combined.py \
     --base_data_path /path/to/DICTA25-Can-AI-Models-Count-Release/dataset \
-    --dataset_name final_dataset_default \
+    --dataset_name pairtally_dataset \
     --save_results
 ```
 
@@ -105,7 +105,7 @@ python evaluate_DICTA25_qwen2_5vl_combined.py \
 conda activate llama-vision
 python evaluate_DICTA25_internvl3_combined.py \
     --base_data_path /path/to/DICTA25-Can-AI-Models-Count-Release/dataset \
-    --dataset_name final_dataset_default \
+    --dataset_name pairtally_dataset \
     --save_results
 ```
 
@@ -114,7 +114,7 @@ python evaluate_DICTA25_internvl3_combined.py \
 conda activate llama-vision
 python evaluate_DICTA25_llama_vision_combined.py \
     --base_data_path /path/to/DICTA25-Can-AI-Models-Count-Release/dataset \
-    --dataset_name final_dataset_default \
+    --dataset_name pairtally_dataset \
     --save_results
 ```
 
@@ -123,7 +123,7 @@ python evaluate_DICTA25_llama_vision_combined.py \
 conda activate ovis2-34b
 python evaluate_DICTA25_ovis2_combined.py \
     --base_data_path /path/to/DICTA25-Can-AI-Models-Count-Release/dataset \
-    --dataset_name final_dataset_default \
+    --dataset_name pairtally_dataset \
     --save_results
 ```
 
@@ -172,12 +172,12 @@ Results for each VLM are saved to:
 ```
 /path/to/results/{Model}-DICTA25-Results/
 ├── {Model}-quantitative/          # Quantitative metrics
-│   └── final_dataset_default/
+│   └── pairtally_dataset/
 │       ├── {Model}_quantitative_results.json
 │       ├── {Model}_quantitative_results.pkl
 │       └── {Model}_summary.txt
 └── {Model}-qualitative/           # Qualitative results
-    └── final_dataset_default/
+    └── pairtally_dataset/
         ├── positive_qualitative_data.json
         ├── negative_qualitative_data.json
         ├── complete_qualitative_data.json

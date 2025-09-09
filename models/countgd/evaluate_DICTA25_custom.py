@@ -123,12 +123,12 @@ def get_args_parser():
     parser.add_argument(
         "--annotation_file",
         help="path to DICTA25 annotations file",
-        default="../test_bbx_frames/annotations/annotation_FSC147_384.json",
+        default="../test_bbx_frames/annotations/annotation_pairtally_dataset.json",
     )
     parser.add_argument(
         "--image_dir",
         help="path to DICTA25 images folder",
-        default="../test_bbx_frames/images_384_VarV2",
+        default="../test_bbx_frames/images",
     )
     parser.add_argument(
         "--model_name",

@@ -49,24 +49,105 @@ cd DICTA25-Can-AI-Models-Count-Release
 
 ### 2. Dataset Preparation
 
+**Important**: The PairTally images are not included in this repository due to size constraints. You need to download them separately from Google Drive.
+
+**Step 1: Download Images**
+Download the PairTally images from Google Drive:
+- **Download Link**: [https://drive.google.com/file/d/1TnenXS4yFicjo81NnmClfzgc8ltmmeBv/view](https://drive.google.com/file/d/1TnenXS4yFicjo81NnmClfzgc8ltmmeBv/view)
+- File: `PairTally-Images-Only.zip` (contains 681 images)
+
+**Step 2: Extract and Place Images**
 ```bash
-# Download and prepare the PairTally dataset
+# After downloading PairTally-Images-Only.zip, extract it:
+unzip PairTally-Images-Only.zip
+
+# Move images to the correct location:
+mv PairTally-Images-Only/* dataset/pairtally_dataset/images/
+
+# Verify the dataset is ready
 cd dataset
-python tools/download_dataset.py
-python tools/prepare_annotations.py
+python verify_dataset.py
+
+# Expected output: "✅ Ready to run evaluations!"
 ```
 
-### 3. Run Evaluations
+**Alternative: Manual Setup from Original Data**
+If you have access to the original CVAT annotations and want to recreate the dataset:
+
+```bash
+# Convert CVAT annotations to PairTally format
+cd dataset/tools
+python convert_cvat_to_pairtally.py ../annotations/bbx_anno_valid.json --output_dir ../custom_pairtally/annotations/
+
+# Copy images with correct filenames (requires original images)
+python copy_images_with_mapping.py
+```
+
+**Option C: Manual Setup (Advanced)**
+If you want to set up the FSC147 format manually from CVAT annotations:
+
+```bash
+# Convert CVAT annotations to FSC147 format
+cd dataset/tools
+python convert_cvat_to_fsc147.py ../annotations/bbx_anno_valid.json --output_dir ../custom_fsc147/annotations/
+
+# Copy images with correct filenames (requires original images)
+# See tools/convert_cvat_to_fsc147.py for details
+```
+
+**Dataset Structure:**
+```
+dataset/
+├── pairtally_dataset/          # FSC147-compatible format (RECOMMENDED)
+│   ├── annotations/
+│   │   ├── pairtally_annotations.json      # Main annotation file (681 images)
+│   │   ├── pairtally_annotations_inter.json # INTER-category only (368 images)
+│   │   ├── pairtally_annotations_intra.json # INTRA-category only (313 images)
+│   │   ├── Train_Test_Val_FSC_147.json     # Dataset splits
+│   │   ├── filename_mapping.json           # Original to compact name mapping
+│   │   └── image_metadata.json             # Comprehensive metadata
+│   └── images/           # 681 images with compact filenames
+├── images/                         # Original images (if using Option A)
+└── annotations/                    # Original annotations (if using Option A)
+```
+
+### 3. Evaluation Modes
+
+The PairTally benchmark supports two evaluation modes to assess different aspects of counting performance:
+
+**🔀 Combined Mode** (Recommended for paper results):
+- Provides **2 positive exemplars + 1 negative exemplar** per image
+- Asks models to count **both object classes simultaneously**  
+- Tests ability to distinguish between different object types in the same scene
+- More challenging as models must handle distractors and multi-class counting
+- Used for the main results reported in the paper
+
+**🎯 Custom Mode** (Single-class evaluation):
+- Provides **positive exemplars only** for the target class
+- Asks models to count **one class at a time**
+- Simpler task focusing on counting accuracy for individual object types
+- Two separate runs per image (one for each object class)
+- Useful for analyzing per-class performance
+
+### 4. Run Evaluations
 
 ```bash
 # Run all model evaluations
 ./scripts/evaluation/run_all_evaluations.sh
 
-# Or run individual models
-./scripts/evaluation/run_countgd.sh
-./scripts/evaluation/run_dave.sh
-./scripts/evaluation/run_geco.sh
-# ... etc
+# Or run individual models (combined mode)
+cd models/countgd && ./run_combined_eval.sh
+cd models/dave && ./run_combined_eval.sh  
+cd models/geco && ./run_combined_eval.sh
+cd models/loca && ./run_combined_eval.sh
+cd models/learningtocount && ./run_combined_eval.sh
+
+# Or run custom mode (single-class evaluation)
+cd models/countgd && ./run_custom_eval.sh
+cd models/dave && ./run_custom_eval.sh
+cd models/geco && ./run_custom_eval.sh
+cd models/loca && ./run_custom_eval.sh
+cd models/learningtocount && ./run_custom_eval.sh
 ```
 
 ### 4. Generate Results
@@ -84,9 +165,11 @@ DICTA25-Can-AI-Models-Count-Release/
 ├── README.md                 # This file
 ├── LICENSE                   # License information
 ├── dataset/                  # Dataset files and tools
-│   ├── annotations/          # Annotation files in various formats
-│   ├── images/              # Image data (download separately)
-│   └── tools/               # Dataset preparation and conversion tools
+│   ├── pairtally_dataset/   # Main dataset (FSC147-compatible format)
+│   │   ├── annotations/     # Annotation files (simple & augmented versions)
+│   │   └── images/         # Image data (download from Google Drive)
+│   ├── annotations/         # Original CVAT annotation files
+│   └── tools/              # Dataset preparation and conversion tools
 ├── models/                   # Model-specific code and configurations
 │   ├── countgd/             # CountGD model setup and evaluation
 │   ├── dave/                # DAVE model setup and evaluation

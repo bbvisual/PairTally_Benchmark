@@ -19,24 +19,133 @@ The PairTally dataset is specifically designed to evaluate AI models' ability to
 
 ```
 dataset/
-├── README.md              # This file
-├── annotations/           # Annotation files
-│   ├── parsed_annotations.json    # Main annotation file (CVAT format)
-│   ├── bbx_anno_valid.json       # Validated bounding box annotations
-│   ├── image_metadata.json       # Image metadata and statistics
-│   └── fsc147_format/            # FSC147-compatible annotation files
-├── images/                # Image data (download separately)
-└── tools/                # Dataset processing tools
-    ├── convert_cvat_to_fsc147.py      # Convert annotations to FSC147 format
+├── README.md                    # This file
+├── pairtally_dataset/       # PairTally-compatible format (RECOMMENDED)
+│   ├── annotations/
+│   │   ├── pairtally_annotations.json      # Main annotation file (681 images)
+│   │   ├── pairtally_annotations_inter.json # INTER-category only (368 images)  
+│   │   ├── pairtally_annotations_intra.json # INTRA-category only (313 images)
+│   │   ├── Train_Test_Val_FSC_147.json     # Dataset splits (all in 'test')
+│   │   ├── Train_Test_Val_FSC_147_inter.json # INTER splits
+│   │   ├── Train_Test_Val_FSC_147_intra.json # INTRA splits
+│   │   ├── filename_mapping.json           # Original to compact name mapping
+│   │   └── image_metadata.json             # Comprehensive image metadata
+│   └── images/        # 681 images with compact filenames
+├── annotations/                 # Original CVAT annotation files
+│   ├── bbx_anno_valid.json     # Complete annotations (681 images) - CVAT format
+│   ├── parsed_annotations.json  # Subset annotations (342 images) - CVAT format  
+│   └── image_metadata.json     # Original image metadata and statistics
+├── images/                     # Original images (if available from Google Drive)
+└── tools/                     # Dataset processing tools
+    ├── convert_cvat_to_fsc147.py      # Convert CVAT to FSC147 format
     ├── get_annotation_statistics.py   # Calculate dataset statistics
-    └── calculate_accuracy_metrics.py  # Validate annotation accuracy
+    └── verify_dataset.py             # Verify dataset integrity
 ```
 
-## Annotation Format
+**Note**: The `pairtally_dataset/` format is the recommended format for running evaluations as it's compatible with existing FSC147-based counting models.
 
-### File Naming Convention
+## Annotation Formats
 
-Images follow a structured naming convention:
+The PairTally dataset provides annotations in **three** formats:
+
+1. **PairTally Simple Format** - **Recommended for most evaluations** - Simple, concise object descriptions
+2. **PairTally Augmented Format** - Detailed, descriptive object descriptions for enhanced training
+3. **Original CVAT Format** - For analysis and custom processing
+
+### PairTally Simple Format (Recommended for Evaluation)
+
+The simple format uses concise object descriptions like "pasta", "dice", "coin" for straightforward evaluation:
+
+**Main Files:**
+- `pairtally_annotations_simple.json`: Complete dataset (681 images) with simple prompts
+- `pairtally_annotations_inter_simple.json`: INTER-category subset (368 images) 
+- `pairtally_annotations_intra_simple.json`: INTRA-category subset (313 images)
+- `pairtally_splits_simple.json`: Dataset splits for simple format
+- `pairtally_splits_inter_simple.json`: INTER splits for simple format
+- `pairtally_splits_intra_simple.json`: INTRA splits for simple format
+
+### PairTally Augmented Format (Detailed Descriptions)
+
+The augmented format uses detailed object descriptions like "Curved beige pieces with smooth surface and slight ridges" for enhanced model training:
+
+**Main Files:**
+- `pairtally_annotations_augmented.json`: Complete dataset (681 images) with detailed prompts
+- `pairtally_annotations_inter_augmented.json`: INTER-category subset (368 images) 
+- `pairtally_annotations_intra_augmented.json`: INTRA-category subset (313 images)
+- `pairtally_splits_augmented.json`: Dataset splits for augmented format
+- `pairtally_splits_inter_augmented.json`: INTER splits for augmented format
+- `pairtally_splits_intra_augmented.json`: INTRA splits for augmented format
+
+**Annotation Structure (per image):**
+```json
+{
+  "image_name.jpg": {
+    "points": [[x1, y1], [x2, y2], ...],           # Point annotations for positive objects
+    "negative_points": [[x1, y1], [x2, y2], ...],  # Point annotations for negative objects  
+    "box_examples_coordinates": [                    # Bounding boxes for positive exemplars
+      [[x1,y1], [x2,y1], [x2,y2], [x1,y2]], ...
+    ],
+    "negative_box_exemples_coordinates": [           # Bounding boxes for negative exemplars
+      [[x1,y1], [x2,y1], [x2,y2], [x1,y2]], ...
+    ],
+    "positive_prompt": "Description of positive objects",
+    "negative_prompt": "Description of negative objects"
+  }
+}
+```
+
+**Compact Filenames:**
+Images use compact filenames for efficiency: `{CATEGORY}_{TYPE}_{CODE1}_{CODE2}_{count1}_{count2}_{hash}.jpg`
+
+Example: `FOO_INTER_LIM0_CHI0_035_038_0db2b3.jpg` 
+- FOO = Food category
+- INTER = Inter-category counting  
+- LIM0 = Lime objects (35 count)
+- CHI0 = Chili objects (38 count)
+
+### Original CVAT Format
+
+The `annotations/` directory contains the original annotations exported from CVAT:
+
+**Files:**
+- `bbx_anno_valid.json`: Complete dataset (681 images) in CVAT export format
+- `parsed_annotations.json`: Subset (342 images) used in initial experiments  
+- `image_metadata.json`: Comprehensive image metadata and statistics
+
+**CVAT Annotation Structure (per image):**
+```json
+{
+  "image_name.jpg": {
+    "pos": [
+      {"bbox": [x1, y1, x2, y2], "obj": "object_name", "attr": "attribute"},
+      ...
+    ],
+    "neg": [
+      {"bbox": [x1, y1, x2, y2], "obj": "object_name", "attr": "attribute"},
+      ...
+    ]
+  }
+}
+```
+
+**Key Features:**
+- Original long-form image names with full object descriptions
+- Bounding box coordinates in [x1, y1, x2, y2] format
+- Object names and attributes as annotated in CVAT
+- Separate positive and negative object annotations
+
+### Converting Between Formats
+
+Use the provided conversion tool to convert CVAT format to FSC147 format:
+
+```bash
+cd dataset/tools
+python convert_cvat_to_fsc147.py ../annotations/bbx_anno_valid.json --output_dir ../final_dataset_recreated/annotations/
+```
+
+### Original File Naming Convention (CVAT Export)
+
+Original images follow a structured naming convention:
 ```
 {object1}_{object2}_{TYPE}_{CATEGORY}_{CODE1}_{CODE2}_{count1}_{count2}_{version}_{id}.jpg
 ```
@@ -104,9 +213,23 @@ Counting objects of the **same category** with different fine-grained attributes
 ## Usage
 
 ### 1. Download Images
+
+**Important**: The PairTally images are not included in this Git repository due to size constraints.
+
+**Download from Google Drive**:
+- **Download Link**: [https://drive.google.com/file/d/1TnenXS4yFicjo81NnmClfzgc8ltmmeBv/view](https://drive.google.com/file/d/1TnenXS4yFicjo81NnmClfzgc8ltmmeBv/view)
+- File: `PairTally-Images-Only.zip` (contains all 681 images)
+
+**Extract and Setup**:
 ```bash
-# Images should be downloaded separately due to size
-# Place images in the images/ directory
+# After downloading PairTally-Images-Only.zip:
+unzip PairTally-Images-Only.zip
+
+# Move images to the correct location:
+mv PairTally-Images-Only/* pairtally_dataset/images/
+
+# Verify setup
+python verify_dataset.py
 ```
 
 ### 2. Convert Annotations

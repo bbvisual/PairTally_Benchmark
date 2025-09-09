@@ -60,10 +60,31 @@ wget -P checkpoints https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b
 
 ### Files in this Directory
 
-- `evaluate_DICTA25_combined.py` - Main evaluation script for DICTA25 dataset
-- `evaluate_DICTA25_custom.py` - Custom evaluation with specific configurations  
-- `run_combined_eval.sh` - Shell script to run the evaluation
+**Evaluation Scripts:**
+- `evaluate_DICTA25_combined.py` - **Combined evaluation**: 2 positive + 1 negative exemplars, count both classes
+- `evaluate_DICTA25_custom.py` - **Custom evaluation**: Positive exemplars only, count 1 class at a time
+- `evaluate_DICTA25_text_only.py` - Text-only evaluation (no exemplar boxes)
+- `evaluate_DICTA25_combined_text_only.py` - Combined text-only evaluation
+
+**Run Scripts:**
+- `run_combined_eval.sh` - Shell script for combined evaluation
+- `run_custom_eval.sh` - Shell script for custom evaluation  
+- `run_custom_eval_text_only.sh` - Shell script for text-only custom evaluation
 - `README.md` - This file
+
+### Evaluation Modes
+
+**🔀 Combined Mode** (`evaluate_DICTA25_combined.py`):
+- Provides **2 positive exemplars + 1 negative exemplar** per image
+- Asks model to count **both object classes simultaneously**
+- Tests ability to distinguish between different object types in the same scene
+- More challenging as model must handle distractors
+
+**🎯 Custom Mode** (`evaluate_DICTA25_custom.py`):
+- Provides **positive exemplars only** for the target class
+- Asks model to count **one class at a time**
+- Simpler task focusing on counting accuracy for a single object type
+- Two separate runs per image (one for each object class)
 
 ### Running Evaluation
 
@@ -74,16 +95,37 @@ cp run_combined_eval.sh /path/to/CountGD/
 ```
 
 2. **Update paths in the evaluation scripts:**
-Edit the scripts to point to your DICTA25 dataset location:
+Edit the scripts to point to your PairTally dataset location:
 ```python
-base_data_path = "/path/to/DICTA25-Can-AI-Models-Count-Release/dataset"
+base_data_path = "/path/to/PairTally-Benchmark-Release/dataset"
+# The script will use: base_data_path/pairtally_dataset/
 ```
 
+**Important**: The evaluation scripts expect the FSC147-compatible format in `dataset/pairtally_dataset/`:
+- Annotations: `dataset/pairtally_dataset/annotations/pairtally_annotations.json`
+- Images: `dataset/pairtally_dataset/images/`
+
 3. **Run evaluation:**
+
+**Option A: Combined Mode (Recommended for paper results)**
 ```bash
 cd /path/to/CountGD
 conda activate countgd
 ./run_combined_eval.sh
+```
+
+**Option B: Custom Mode (Single-class counting)**
+```bash
+cd /path/to/CountGD
+conda activate countgd
+./run_custom_eval.sh
+```
+
+**Option C: Text-Only Custom Mode**
+```bash
+cd /path/to/CountGD
+conda activate countgd
+./run_custom_eval_text_only.sh
 ```
 
 ### Evaluation Parameters
