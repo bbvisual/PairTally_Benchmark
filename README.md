@@ -1,273 +1,217 @@
-# Can Current AI Models Count What We Mean, Not What They See?
+# 🎯 PairTally: Can AI Count What We Mean, Not What They See?
 
-**A Benchmark and Systematic Evaluation**
+<p align="center">
+  <img src="assets/banner.png" alt="PairTally Dataset Examples" width="100%">
+</p>
 
-[![Paper](https://img.shields.io/badge/Paper-DICTA2025-blue)](...)
-[![Dataset](https://img.shields.io/badge/Dataset-PairTally-green)](https://drive.google.com/file/d/1TnenXS4yFicjo81NnmClfzgc8ltmmeBv/view?usp=drive_link)
+<p align="center">
+  <strong>A Benchmark for Fine-Grained Visual Counting in the Real World</strong>
+</p>
 
-## Overview
+<p align="center">
+  <a href="https://arxiv.org/abs/xxxx.xxxxx">📄 Paper</a> •
+  <a href="#-quick-start">🚀 Quick Start</a> •
+  <a href="#-dataset">📊 Dataset</a> •
+  <a href="#-leaderboard">🏆 Leaderboard</a> •
+  <a href="#-demo">💻 Demo</a> •
+  <a href="#-citation">📝 Citation</a>
+</p>
 
-This repository contains the code and data for our DICTA 2025 paper ["Can Current AI Models Count What We Mean, Not What They See? A Benchmark and Systematic Evaluation"](url). We introduce [**PairTally**](https://drive.google.com/file/d/1TnenXS4yFicjo81NnmClfzgc8ltmmeBv/view?usp=drive_link)
-, a benchmark dataset specifically designed to evaluate fine-grained visual counting, and systematically evaluate 10 state-of-the-art models across different counting paradigms.
+---
 
-### Key Contributions
+## 🤔 The Challenge
 
-1. **PairTally Dataset**: 681 high-resolution images with object pairs, designed for fine-grained counting evaluation
-2. **Systematic Evaluation**: Benchmarking of 10 models including 4 exemplar-based counters, 2 language-prompted detectors, and 4 Vision-Language Models (VLMs)
-3. **Fine-grained Analysis**: First systematic evaluation of INTER-category vs INTRA-category counting with attribute-specific analysis (color, size, texture/shape)
+Imagine you're asked to count the **red poker chips** in a pile that also contains blue ones. Or distinguish between **long silver screws** and **short bronze screws** scattered on a table. Simple for humans, right? 
 
-## Models Evaluated
+**But can AI do it?**
 
-### Exemplar-Based Counting Models (4)
-- **FamNet** - Learning to Count Everything (CVPR 2021) - First exemplar-guided counting model
-- **DAVE** - A Detect-and-Verify Paradigm for Low-Shot Counting (CVPR 2024)  
-- **GeCo** - A Novel Unified Architecture for Low-Shot Counting (NeurIPS 2024)
-- **LOCA** - Low-Shot Object Counting with Iterative Prototype Adaptation
+Current vision models excel at detecting objects, but struggle when asked to count specific items based on subtle differences in:
+- 🎨 **Color** (black vs. white game pieces)
+- 📏 **Size** (large vs. small marbles) 
+- 🔷 **Shape/Texture** (spiral vs. penne pasta)
 
-### Language-Prompted Detectors (2)
-- **CountGD** - Multi-Modal Open-World Counting (NeurIPS 2024) - Text + exemplar prompts
-- **LLMDet** - Learning Strong Open-Vocabulary Object Detectors - Text-only prompts
+## 🌟 Introducing PairTally
 
-### Vision-Language Models (4)
-- **Ovis2** - Structural Embedding Alignment for Multimodal LLM (16B)
-- **Qwen2.5-VL** - Enhanced Vision-Language Model (7B)
-- **LLaMA-3.2** - Vision-Instruct Model (11B)
-- **InternVL3** - Advanced Multimodal Model (14B)
+PairTally is the first benchmark specifically designed to test whether AI can truly understand *what* humans want to count, not just detect what's visible. Each of our **681 high-resolution images** contains two types of objects that require fine-grained discrimination.
 
-## Quick Start
+### Why PairTally Matters
 
-### 1. Environment Setup
+- **🎯 Real-world scenarios**: From inventory management to medical diagnostics
+- **🔬 Systematic evaluation**: Controlled pairs of visually similar objects
+- **📈 Reveals critical gaps**: Current SOTA models achieve only 53.07 MAE (humans: ~5 MAE)
+- **🚀 Drives innovation**: Pushes the boundaries of visual understanding
+
+## 📊 Dataset at a Glance
+
+<table>
+<tr>
+<td width="50%">
+
+### Key Statistics
+- **681** high-resolution images
+- **54** object categories
+- **98** fine-grained subcategories
+- **2** object types per image
+- **~200** average objects per image
+
+</td>
+<td width="50%">
+
+### Attribute Distribution
+- 🎨 **43.5%** Color variations
+- 🔷 **42.5%** Shape/Texture differences  
+- 📏 **14.0%** Size distinctions
+
+</td>
+</tr>
+</table>
+
+### Dataset Structure
+
+```
+PairTally/
+├── 📸 Images (681 files)
+├── 📋 Annotations
+│   ├── INTER-category (350 images) - Different object types
+│   └── INTRA-category (331 images) - Same object, different attributes
+└── 📓 Evaluation Tools
+```
+
+## 🚀 Quick Start
+
+### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/DICTA25-Can-AI-Models-Count-Release.git
-cd DICTA25-Can-AI-Models-Count-Release
+git clone https://github.com/bbvisual/PairTally_Benchmark.git
+cd PairTally_Benchmark
 
-# Set up environments for different models
-./scripts/setup/setup_all_environments.sh
-```
+# Download the dataset
+python download_dataset.py
 
-### 2. Dataset Preparation
-
-**Important**: The PairTally images are not included in this repository due to size constraints. You need to download them separately from Google Drive.
-
-**Step 1: Download Images**
-Download the PairTally images from Google Drive:
-- **Download Link**: [https://drive.google.com/file/d/1TnenXS4yFicjo81NnmClfzgc8ltmmeBv/view](https://drive.google.com/file/d/1TnenXS4yFicjo81NnmClfzgc8ltmmeBv/view)
-- File: `PairTally-Images-Only.zip` (contains 681 images)
-
-**Step 2: Extract and Place Images**
-```bash
-# After downloading PairTally-Images-Only.zip, extract it:
-unzip PairTally-Images-Only.zip
-
-# Move images to the correct location:
-mv PairTally-Images-Only/* dataset/pairtally_dataset/images/
-
-# Verify the dataset is ready
-cd dataset
+# Verify installation
 python verify_dataset.py
-
-# Expected output: "✅ Ready to run evaluations!"
 ```
 
-**Alternative: Manual Setup from Original Data**
-If you have access to the original CVAT annotations and want to recreate the dataset:
+### Your First Count
+
+```python
+from pairtally import PairTallyDataset
+
+# Load dataset
+dataset = PairTallyDataset()
+
+# Get a random image
+image, annotation = dataset.get_random_sample()
+
+# Display the challenge
+dataset.visualize(image, annotation)
+# Shows: "Count the red poker chips" vs "Count the blue poker chips"
+```
+
+## 💻 Demo
+
+Try our interactive demo notebook to explore the dataset:
 
 ```bash
-# Convert CVAT annotations to PairTally format
-cd dataset/tools
-python convert_cvat_to_pairtally.py ../annotations/bbx_anno_valid.json --output_dir ../custom_pairtally/annotations/
-
-# Copy images with correct filenames (requires original images)
-python copy_images_with_mapping.py
+jupyter notebook PairTally_Demo_Notebook.ipynb
 ```
 
-**Option C: Manual Setup (Advanced)**
-If you want to set up the FSC147 format manually from CVAT annotations:
+The notebook includes:
+- 🎲 Random sample visualization
+- 📊 Dataset statistics and distributions
+- 🔍 Fine-grained attribute analysis
+- 🏃 Model evaluation pipeline
 
-```bash
-# Convert CVAT annotations to FSC147 format
-cd dataset/tools
-python convert_cvat_to_fsc147.py ../annotations/bbx_anno_valid.json --output_dir ../custom_fsc147/annotations/
+## 🏆 Leaderboard
 
-# Copy images with correct filenames (requires original images)
-# See tools/convert_cvat_to_fsc147.py for details
+| Model | Type | Overall MAE ↓ | INTER MAE | INTRA MAE | Color NAE | Size NAE | Texture NAE |
+|-------|------|--------------|-----------|-----------|-----------|----------|-------------|
+| 🥇 **GeCo** | Exemplar | **53.07** | 45.05 | 54.80 | 0.791 | 1.345 | 0.946 |
+| 🥈 CountGD | Hybrid | 57.33 | 39.78 | 56.54 | 0.856 | 1.402 | 0.793 |
+| 🥉 LoCA | Exemplar | 62.78 | 71.89 | 57.45 | 0.799 | 1.244 | 1.007 |
+| DAVE | Exemplar | 69.49 | 46.27 | 46.75 | 0.738 | 1.293 | 0.693 |
+| FamNet | Exemplar | 88.30 | 66.97 | 74.75 | 1.296 | 1.859 | 1.448 |
+| Qwen2.5-VL | VLM | 99.88 | 46.35 | 67.86 | - | - | - |
+| Human* | - | ~5 | ~3 | ~7 | ~0.1 | ~0.2 | ~0.15 |
+
+*Estimated human performance
+
+## 🔍 Key Findings
+
+Our benchmark reveals that current AI models:
+
+1. **Struggle with fine-grained discrimination** - Often count all objects regardless of specified attributes
+2. **Color is easiest, size is hardest** - Models achieve best performance on color variations (NAE: 0.74-0.79)
+3. **VLMs underperform** - Large vision-language models lag behind specialized counting methods
+4. **Room for improvement** - Best model (GeCo) still 10x worse than human performance
+
+## 🛠️ Evaluation
+
+### Evaluate Your Model
+
+```python
+from pairtally import evaluate_model
+
+# Load your model
+model = load_your_model()
+
+# Run evaluation
+results = evaluate_model(
+    model=model,
+    dataset=dataset,
+    subset='all'  # or 'inter', 'intra'
+)
+
+print(f"MAE: {results['mae']:.2f}")
+print(f"RMSE: {results['rmse']:.2f}")
+print(f"NAE: {results['nae']:.2f}")
 ```
 
-**Dataset Structure:**
-```
-dataset/
-├── pairtally_dataset/          # FSC147-compatible format (RECOMMENDED)
-│   ├── annotations/
-│   │   ├── pairtally_annotations.json      # Main annotation file (681 images)
-│   │   ├── pairtally_annotations_inter.json # INTER-category only (368 images)
-│   │   ├── pairtally_annotations_intra.json # INTRA-category only (313 images)
-│   │   ├── Train_Test_Val_FSC_147.json     # Dataset splits
-│   │   ├── filename_mapping.json           # Original to compact name mapping
-│   │   └── image_metadata.json             # Comprehensive metadata
-│   └── images/           # 681 images with compact filenames
-├── images/                         # Original images (if using Option A)
-└── annotations/                    # Original annotations (if using Option A)
-```
+### Supported Model Types
 
-### 3. Evaluation Modes
+- 📦 **Exemplar-based**: FamNet, DAVE, GeCo, LoCA
+- 💬 **Language-prompted**: CountGD, LLMDet
+- 🤖 **Vision-Language Models**: GPT-4V, Qwen-VL, LLaMA-Vision
 
-The PairTally benchmark supports two evaluation modes to assess different aspects of counting performance:
+## 📚 Resources
 
-**🔀 Combined Mode** (Recommended for paper results):
-- Provides **2 positive exemplars + 1 negative exemplar** per image
-- Asks models to count **both object classes simultaneously**  
-- Tests ability to distinguish between different object types in the same scene
-- More challenging as models must handle distractors and multi-class counting
-- Used for the main results reported in the paper
+- 📄 **Paper**: [arXiv:xxxx.xxxxx](https://arxiv.org/abs/xxxx.xxxxx)
+- 💾 **Dataset Download**: [Google Drive](https://drive.google.com/file/d/1TnenXS4yFicjo81NnmClfzgc8ltmmeBv/view)
+- 📓 **Demo Notebook**: [PairTally_Demo.ipynb](./PairTally_Demo_Notebook.ipynb)
+- 🏆 **Challenge**: [Submit your results](https://forms.gle/xxxxx)
 
-**🎯 Custom Mode** (Single-class evaluation):
-- Provides **positive exemplars only** for the target class
-- Asks models to count **one class at a time**
-- Simpler task focusing on counting accuracy for individual object types
-- Two separate runs per image (one for each object class)
-- Useful for analyzing per-class performance
+## 📝 Citation
 
-### 4. Run Evaluations
-
-```bash
-# Run all model evaluations
-./scripts/evaluation/run_all_evaluations.sh
-
-# Or run individual models (combined mode)
-cd models/countgd && ./run_combined_eval.sh
-cd models/dave && ./run_combined_eval.sh  
-cd models/geco && ./run_combined_eval.sh
-cd models/loca && ./run_combined_eval.sh
-cd models/learningtocount && ./run_combined_eval.sh
-
-# Or run custom mode (single-class evaluation)
-cd models/countgd && ./run_custom_eval.sh
-cd models/dave && ./run_custom_eval.sh
-cd models/geco && ./run_custom_eval.sh
-cd models/loca && ./run_custom_eval.sh
-cd models/learningtocount && ./run_custom_eval.sh
-```
-
-### 4. Generate Results
-
-```bash
-# Generate summary tables and figures
-python scripts/analysis/generate_summary_tables.py
-python scripts/visualization/create_comparison_plots.py
-```
-
-## Repository Structure
-
-```
-DICTA25-Can-AI-Models-Count-Release/
-├── README.md                 # This file
-├── LICENSE                   # License information
-├── dataset/                  # Dataset files and tools
-│   ├── pairtally_dataset/   # Main dataset (FSC147-compatible format)
-│   │   ├── annotations/     # Annotation files (simple & augmented versions)
-│   │   └── images/         # Image data (download from Google Drive)
-│   ├── annotations/         # Original CVAT annotation files
-│   └── tools/              # Dataset preparation and conversion tools
-├── models/                   # Model-specific code and configurations
-│   ├── countgd/             # CountGD model setup and evaluation
-│   ├── dave/                # DAVE model setup and evaluation
-│   ├── geco/                # GeCo model setup and evaluation
-│   ├── learningtocount/     # LearningToCountEverything setup
-│   ├── loca/                # LOCA model setup and evaluation
-│   └── vlms/                # Vision-Language Models evaluation
-├── evaluation/               # Evaluation scripts and results
-│   ├── individual/          # Individual model evaluation scripts
-│   ├── combined/            # Combined evaluation and comparison scripts
-│   └── analysis/            # Analysis and metrics calculation
-├── results/                  # Results and outputs
-│   ├── figures/             # Generated plots and visualizations
-│   ├── tables/              # Summary tables and metrics
-│   └── raw_data/            # Raw evaluation outputs
-├── scripts/                  # Utility scripts
-│   ├── setup/               # Environment and dependency setup
-│   ├── evaluation/          # Evaluation pipeline scripts
-│   └── visualization/       # Plotting and visualization scripts
-└── requirements/             # Dependencies and environment files
-    ├── environments/        # Conda environment files
-    └── models/              # Model-specific requirements
-```
-
-## Dataset Details
-
-The **PairTally** dataset contains:
-- **681 high-resolution images** across 5 super-categories (Food, Fun, Household, Office, Other)
-- **54 object categories** with 98 subcategories total
-- **97 subcategory pairs**: 47 INTRA-category + 50 INTER-category pairs
-- **Fine-grained attributes**: Color (43.5%), Texture/Shape (42.5%), Size (14.1%)
-
-### Super-Categories
-- **Food**: pasta, lime, peppercorn, tomato, chili, peanut, bean, seeds, coffee candy, garlic, shallot
-- **Fun**: checker pieces, mahjong tiles, lego pieces, chess pieces, puzzle pieces, poker chips, playing cards, marbles, dice
-- **Household**: toothpicks, cotton buds, pills, batteries, hair clippers, bills, coins, bottle caps, shirt buttons, utensils
-- **Office**: push pins, stickers, craft sticks, rubber bands, sticky notes, paper clips, pens, pencils, rhinestones, zip ties, safety pins
-- **Other**: screws, bolts, nuts, washers, beads, clips, pegs, stones, novelty buttons
-
-## Results Summary
-
-### Overall Performance (MAE/RMSE - Lower is Better)
-
-| Model | Overall MAE | Overall RMSE | Model Type |
-|-------|-------------|--------------|------------|
-| **GeCo** | **53.07** | **98.00** | Exemplar-based |
-| **CountGD** | **57.33** | **108.93** | Language-prompted |
-| **LOCA** | 62.78 | 136.76 | Exemplar-based |
-| **DAVE** | 69.49 | 130.42 | Exemplar-based |
-| **FamNet** | 88.30 | 148.42 | Exemplar-based |
-| **LLaMA-3.2** | 97.56 | 175.80 | Vision-Language Model |
-| **Qwen2.5-VL** | 99.88 | 174.93 | Vision-Language Model |
-| **LLMDet** | 107.84 | 177.66 | Language-prompted |
-| **Ovis2** | 111.56 | 174.16 | Vision-Language Model |
-| **InternVL3** | 115.98 | 179.89 | Vision-Language Model |
-
-### Key Findings
-
-1. **Best Overall**: GeCo (MAE: 53.07) and CountGD (MAE: 57.33) achieve the best performance
-2. **VLM Limitations**: All Vision-Language Models perform poorly (MAE > 97), indicating they struggle with precise enumeration
-3. **INTER vs INTRA**: Models generally perform better on INTER-category (different objects) than INTRA-category (similar objects) counting
-4. **Attribute Sensitivity**: Color differences are easiest to distinguish, while size and texture/shape are more challenging
-
-*Detailed results and analysis available in the `results/` directory.*
-
-## Citation
-
-If you use this dataset or code in your research, please cite our paper:
+If you use PairTally in your research, please cite:
 
 ```bibtex
-@inproceedings{your-name2025dicta25,
+@inproceedings{nguyen2025pairtally,
   title={Can Current AI Models Count What We Mean, Not What They See? A Benchmark and Systematic Evaluation},
-  author={Your Name and Co-authors},
-  booktitle={Proceedings of the International Conference on Digital Image Computing: Techniques and Applications (DICTA)},
+  author={Nguyen, Gia Khanh and Huang, Yifeng and Hoai, Minh},
+  booktitle={Digital Image Computing: Techniques and Applications (DICTA)},
   year={2025}
 }
 ```
 
-## License
+## 🤝 Contributing
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-## Acknowledgments
+## 📧 Contact
 
-We thank the authors of the original model implementations:
-- CountGD: [Amini-Naieni et al., NeurIPS 2024]
-- DAVE: [Pelhan et al., CVPR 2024]
-- GeCo: [Pelhan et al., NeurIPS 2024]
-- LearningToCountEverything: [Ranjan et al., CVPR 2021]
+- **Gia Khanh Nguyen**: [giakhanh.nguyen@adelaide.edu.au](mailto:giakhanh.nguyen@adelaide.edu.au)
+- **Lab Website**: [Australian Institute for Machine Learning](https://www.adelaide.edu.au/aiml/)
 
-## Contact
+## 🙏 Acknowledgments
 
-For questions or issues, please contact:
-- [Your Name] - [your.email@institution.edu]
-- [Co-author Name] - [coauthor.email@institution.edu]
+We thank the Australian Institute for Machine Learning and Stony Brook University for their support in creating this benchmark.
 
-## Updates
+---
 
-- **[Date]**: Initial release with dataset and evaluation code
-- **[Date]**: Added VLM evaluation scripts
-- **[Date]**: Updated with final paper results
+<p align="center">
+  <strong>🎯 Help us push the boundaries of visual counting!</strong><br>
+  <a href="https://github.com/bbvisual/PairTally_Benchmark">⭐ Star</a> • 
+  <a href="https://github.com/bbvisual/PairTally_Benchmark/fork">🍴 Fork</a> • 
+  <a href="https://github.com/bbvisual/PairTally_Benchmark/issues">🐛 Issues</a>
+</p>
