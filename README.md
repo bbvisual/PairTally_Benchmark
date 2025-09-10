@@ -1,7 +1,7 @@
 # PairTally: Can Current AI Models Count What We Mean, Not What They See?
 
 <p align="center">
-  <img src="img/banner.png" alt="PairTally Dataset Examples" width="100%">
+  <img src="img/teaser.png" alt="PairTally Dataset Examples" width="100%">
 </p>
 
 <p align="center">
