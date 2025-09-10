@@ -45,7 +45,7 @@ We introduce **PairTally**, a benchmark dataset specifically designed to evaluat
 | Object Categories | 54 |
 | Subcategories | 98 |
 | Supercategories | 5 (Food, Fun, Household, Office, Other) |
-| Inter-category pairs | ~50 |
+| Inter-category pairs | 50 |
 | Intra-category pairs | 47 |
 
 ### Structure
