@@ -15,8 +15,8 @@ from transformers import AutoTokenizer, AutoProcessor, MllamaForConditionalGener
 from transformers import pipeline
 
 
-# Custom Dataset class for DICTA25 data (adapted for Llama Vision Combined)
-class DICTA25CombinedDataset(Dataset):
+# Custom Dataset class for PairTally data (adapted for Llama Vision Combined)
+class PairTallyCombinedDataset(Dataset):
     def __init__(self, annotations_file, images_folder, transform=None):
         self.annotations_file = annotations_file
         self.images_folder = images_folder
@@ -65,7 +65,7 @@ class DICTA25CombinedDataset(Dataset):
 
 
 def get_args_parser():
-    parser = argparse.ArgumentParser("DICTA25 Llama Vision Combined Evaluation", add_help=False)
+    parser = argparse.ArgumentParser("PairTally Llama Vision Combined Evaluation", add_help=False)
     
     # dataset parameters
     parser.add_argument("--remove_difficult", action="store_true")
@@ -83,23 +83,23 @@ def get_args_parser():
     )
     parser.add_argument(
         "--annotations_file",
-        help="path to DICTA25 annotations file",
+        help="path to PairTally annotations file",
         default="../test_bbx_frames/annotations/annotation_FSC147_384.json",
     )
     parser.add_argument(
         "--images_folder",
-        help="path to DICTA25 images folder",
+        help="path to PairTally images folder",
         default="../test_bbx_frames/images_384_VarV2",
     )
     parser.add_argument(
         "--output_dir",
         help="output directory for results",
-        default="./Llama_DICTA25_Results",
+        default="./Llama_PairTally_Results",
     )
     parser.add_argument(
         "--base_data_path",
-        help="base path to DICTA25 data",
-        default="../../../DICTA25",
+        help="base path to PairTally data",
+        default="../../../pairtally_dataset",
     )
     parser.add_argument(
         "--dataset_name",
@@ -120,7 +120,7 @@ def get_args_parser():
     parser.add_argument("--save_results", action="store_true")
     parser.add_argument("--save_log", action="store_true")
     parser.add_argument(
-        "--max_new_tokens", default=20, type=int, help="maximum number of tokens to generate"
+        "--max_new_tokens", default=50, type=int, help="maximum number of tokens to generate"
     )
     parser.add_argument(
         "--temperature", default=0.1, type=float, help="temperature for generation"
@@ -149,8 +149,8 @@ def load_llama_vision_model(model_id, device):
 def run_llama_vision_combined_inference(model, processor, image, combined_prompt, args):
     """Run combined inference on a single image with Llama Vision"""
     
-    # Create combined counting prompt - more direct and natural for LlamaVision
-    counting_prompt = f"Count the total number of {combined_prompt} in this image. Respond with only a single number representing the total count of all objects combined. Examples: '15', '42', '0'. Do not include any other text, explanations, or formatting."
+    # Create unified counting prompt as specified in paper
+    counting_prompt = f"Count the number of {combined_prompt} in this image. Provide only the total count in this format: <count>N</count>. If you see no {combined_prompt} or are unsure, respond with <count>0</count>."
     
     print(f"    Llama Vision combined inference with prompt: '{counting_prompt}'")
     
@@ -176,7 +176,7 @@ def run_llama_vision_combined_inference(model, processor, image, combined_prompt
             **inputs,
             max_new_tokens=args.max_new_tokens,
             temperature=args.temperature,
-            do_sample=True if args.temperature > 0 else False
+            do_sample=False
         )
     
     # Decode response
@@ -191,72 +191,32 @@ def run_llama_vision_combined_inference(model, processor, image, combined_prompt
 
 
 def extract_combined_count_from_response(response_text):
-    """Extract numerical count from model response with flexible parsing.
+    """Extract numerical count from model response with strict parsing as specified in paper.
     
-    Parsing logic for LlamaVision:
-    1. Look for standalone numbers at the beginning/end of response
-    2. Extract numbers from natural language patterns
-    3. Handle various formats the model might use
+    Parsing logic:
+    1. Extract ONLY the integer within <count>...</count> tags
+    2. If no valid <count>N</count> format found, default to 0
+    3. No other parsing methods allowed
     """
     # Clean the response
     original_response = response_text.strip()
-    response_text = response_text.strip()
+    response_text = response_text.strip().lower()
     
-    # Method 1: Check if response is just a number
-    if response_text.isdigit():
-        count = int(response_text)
-        parsing_info = f"Direct number response: {count}"
-        return max(0, count), parsing_info
-    
-    # Method 2: Extract number from start of response (e.g., "15" from "15 objects")
-    start_number_match = re.match(r'^(\d+)', response_text)
-    if start_number_match:
-        count = int(start_number_match.group(1))
-        parsing_info = f"Number at start: {count} from '{response_text[:50]}...'"
-        return max(0, count), parsing_info
-    
-    # Method 3: Look for "There are X objects" pattern
-    there_are_pattern = r'(?:there are|there\'s|i (?:see|count|observe))\s*(\d+)'
-    there_are_match = re.search(there_are_pattern, response_text.lower())
-    if there_are_match:
-        count = int(there_are_match.group(1))
-        parsing_info = f"'There are X' pattern: {count}"
-        return max(0, count), parsing_info
-    
-    # Method 4: Look for "total" with number
-    total_pattern = r'total[:\s]*(\d+)'
-    total_match = re.search(total_pattern, response_text.lower())
-    if total_match:
-        count = int(total_match.group(1))
-        parsing_info = f"Total pattern: {count}"
-        return max(0, count), parsing_info
-    
-    # Method 5: Look for standalone numbers in the response
-    numbers = re.findall(r'\b(\d+)\b', response_text)
-    if numbers:
-        # If multiple numbers, try to pick the most likely count
-        numbers = [int(n) for n in numbers]
-        
-        # Filter out very large numbers (likely not counts)
-        reasonable_numbers = [n for n in numbers if n <= 10000]
-        
-        if reasonable_numbers:
-            # Pick the largest reasonable number (often the total count)
-            count = max(reasonable_numbers)
-            parsing_info = f"Best number from response: {count} (from numbers: {numbers})"
-            return max(0, count), parsing_info
-    
-    # Method 6: Legacy <count>N</count> format (in case some responses use it)
+    # Method 1: Extract explicit count in format <count>N</count>
     count_pattern = r'<count>\s*(\d+)\s*</count>'
-    count_matches = re.findall(count_pattern, response_text.lower())
-    if count_matches:
-        count = int(count_matches[-1])
-        parsing_info = f"Explicit count tag: {count}"
-        return max(0, count), parsing_info
+    count_matches = re.findall(count_pattern, response_text)
     
-    # Default: No number found
+    if count_matches:
+        try:
+            count = int(count_matches[-1])  # Use the last count if multiple
+            parsing_info = f"Explicit count tag: {count}"
+            return count, parsing_info
+        except ValueError:
+            pass
+    
+    # Default: No valid <count>N</count> format found
     count = 0
-    parsing_info = f"No valid number found in response: '{original_response[:100]}...'"
+    parsing_info = f"No valid <count>N</count> format found in response: '{original_response[:100]}...'"
     return count, parsing_info
 
 
@@ -339,7 +299,7 @@ def save_quantitative_results(all_results, dataset_folder_name, model_name):
 
 
 def main():
-    parser = argparse.ArgumentParser("DICTA25 Llama Vision Combined Evaluation", parents=[get_args_parser()])
+    parser = argparse.ArgumentParser("PairTally Llama Vision Combined Evaluation", parents=[get_args_parser()])
     args = parser.parse_args()
     
     # If single_dataset is provided, use it; otherwise use dataset_name
@@ -358,8 +318,8 @@ def main():
     else:
         dataset_folder_name = os.path.basename(os.path.dirname(args.annotations_file))
     
-    print("Llama Vision DICTA25 Combined Evaluation")
-    print("=======================================")
+    print("Llama Vision PairTally Combined Evaluation")
+    print("===========================================")
     print(f"Dataset: {dataset_folder_name}")
     print(f"Model: {args.model_id}")
     print(f"Annotations file: {args.annotations_file}")
@@ -372,15 +332,15 @@ def main():
     print("Loading Llama Vision model...")
     model, processor = load_llama_vision_model(args.model_id, args.device)
     
-    # Create output directory structure following DICTA25-RESULTS pattern
+    # Create output directory structure following PairTally-RESULTS pattern
     qual_output_dir = "../../results/LlamaVision-combined-qualitative"
     dataset_output_dir = os.path.join(qual_output_dir, dataset_folder_name)
     os.makedirs(dataset_output_dir, exist_ok=True)
     print(f"Saving combined qualitative data to: {dataset_output_dir}")
     
     # Load dataset
-    print("Loading DICTA25 combined dataset...")
-    dataset = DICTA25CombinedDataset(args.annotations_file, args.images_folder, transform=None)
+    print("Loading PairTally combined dataset...")
+    dataset = PairTallyCombinedDataset(args.annotations_file, args.images_folder, transform=None)
     print(f"Loaded {len(dataset)} images")
     
     model_name = "LlamaVision-Combined"
@@ -448,7 +408,7 @@ def main():
             'llama_vision_response': {
                 'raw_response': combined_response,
                 'parsing_info': parsing_info,
-                'full_prompt': f"Count the total number of {combined_prompt} in this image. Respond with only a single number representing the total count of all objects combined. Examples: '15', '42', '0'. Do not include any other text, explanations, or formatting.",
+                'full_prompt': f"Count the number of {combined_prompt} in this image. Provide only the total count in this format: <count>N</count>. If you see no {combined_prompt} or are unsure, respond with <count>0</count>.",
             },
             'notes': {
                 'vision_language_model_combined_count': True,

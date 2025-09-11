@@ -1,11 +1,11 @@
-# PairTally: Can Current AI Models Count What We Mean, Not What They See?
+# PairTally: A Benchmark Dataset
 
 <p align="center">
   <img src="img/teaser.png" alt="PairTally Dataset Examples" width="100%">
 </p>
 
 <p align="center">
-  <strong>A Benchmark and Systematic Evaluation</strong><br>
+  <strong>Can Current AI Models Count What We Mean, Not What They See?</strong><br>
   <em>Gia Khanh Nguyen<sup>1</sup>, Yifeng Huang<sup>2</sup>, Minh Hoai<sup>1</sup></em><br>
   <sup>1</sup>Australian Institute for Machine Learning, University of Adelaide<br>
   <sup>2</sup>Stony Brook University

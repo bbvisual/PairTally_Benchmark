@@ -15,8 +15,8 @@ from transformers import AutoTokenizer, AutoProcessor, MllamaForConditionalGener
 from transformers import pipeline
 
 
-# Custom Dataset class for DICTA25 data (same as CountGD)
-class DICTA25Dataset(Dataset):
+# Custom Dataset class for PairTally data (same as CountGD)
+class PairTallyCustomDataset(Dataset):
     def __init__(self, annotations_file, images_folder, transform=None):
         self.annotations_file = annotations_file
         self.images_folder = images_folder
@@ -65,7 +65,7 @@ class DICTA25Dataset(Dataset):
 
 
 def get_args_parser():
-    parser = argparse.ArgumentParser("DICTA25 Llama Vision Evaluation", add_help=False)
+    parser = argparse.ArgumentParser("PairTally Llama Vision Evaluation", add_help=False)
     
     # dataset parameters
     parser.add_argument("--remove_difficult", action="store_true")
@@ -83,23 +83,23 @@ def get_args_parser():
     )
     parser.add_argument(
         "--annotations_file",
-        help="path to DICTA25 annotations file",
+        help="path to PairTally annotations file",
         default="../test_bbx_frames/annotations/annotation_FSC147_384.json",
     )
     parser.add_argument(
         "--images_folder",
-        help="path to DICTA25 images folder",
+        help="path to PairTally images folder",
         default="../test_bbx_frames/images_384_VarV2",
     )
     parser.add_argument(
         "--output_dir",
         help="output directory for results",
-        default="./Llama_DICTA25_Results",
+        default="./Llama_PairTally_Results",
     )
     parser.add_argument(
         "--base_data_path",
-        help="base path to DICTA25 data",
-        default="../../../DICTA25",
+        help="base path to PairTally data",
+        default="../../../pairtally_dataset",
     )
     parser.add_argument(
         "--dataset_name",
@@ -120,7 +120,7 @@ def get_args_parser():
     parser.add_argument("--save_results", action="store_true")
     parser.add_argument("--save_log", action="store_true")
     parser.add_argument(
-        "--max_new_tokens", default=20, type=int, help="maximum number of tokens to generate"
+        "--max_new_tokens", default=50, type=int, help="maximum number of tokens to generate"
     )
     parser.add_argument(
         "--temperature", default=0.1, type=float, help="temperature for generation"
@@ -189,11 +189,12 @@ def run_llama_vision_inference(model, processor, image, prompt, args):
 
 
 def extract_count_and_points_from_response(response_text):
-    """Extract numerical count from model response with strict parsing.
+    """Extract numerical count from model response with strict parsing as specified in paper.
     
     Parsing logic:
-    1. <count>N</count> - use explicit count tag
-    2. If no proper format detected, default to 0
+    1. Extract ONLY the integer within <count>...</count> tags
+    2. If no valid <count>N</count> format found, default to 0
+    3. No other parsing methods allowed
     """
     # Clean the response
     original_response = response_text.strip()
@@ -202,30 +203,18 @@ def extract_count_and_points_from_response(response_text):
     # Method 1: Extract explicit count in format <count>N</count>
     count_pattern = r'<count>\s*(\d+)\s*</count>'
     count_matches = re.findall(count_pattern, response_text)
-    explicit_count = None
+    
     if count_matches:
         try:
-            explicit_count = int(count_matches[-1])  # Use the last count if multiple
+            count = int(count_matches[-1])  # Use the last count if multiple
+            parsing_info = f"Explicit count tag: {count}"
+            return count, [], parsing_info
         except ValueError:
             pass
     
-    # Simplified parsing logic - only use explicit count format, otherwise default to 0
-    if explicit_count is not None:
-        # Case 1: Explicit count available
-        count = explicit_count
-        parsing_info = f"Explicit count: {count}"
-    
-    else:
-        # Case 2: No proper format detected - default to 0
-        count = 0
-        parsing_info = "No proper <count>N</count> format detected, defaulting to 0"
-    
-    # Validation and final safety check
-    if count < 0:
-        count = 0
-        parsing_info += " (negative count corrected to 0)"
-    
-    # Return count only (no points since we're not using them anymore)
+    # Default: No valid <count>N</count> format found
+    count = 0
+    parsing_info = f"No valid <count>N</count> format found in response: '{original_response[:100]}...'"
     return count, [], parsing_info
 
 
@@ -378,7 +367,7 @@ def save_quantitative_results(all_results, dataset_folder_name, model_name):
 
 
 def main():
-    parser = argparse.ArgumentParser("DICTA25 Llama Vision Evaluation", parents=[get_args_parser()])
+    parser = argparse.ArgumentParser("PairTally Llama Vision Evaluation", parents=[get_args_parser()])
     args = parser.parse_args()
     
     # If single_dataset is provided, use it; otherwise use dataset_name
@@ -397,8 +386,8 @@ def main():
     else:
         dataset_folder_name = os.path.basename(os.path.dirname(args.annotations_file))
     
-    print("Llama Vision DICTA25 Evaluation")
-    print("==============================")
+    print("Llama Vision PairTally Evaluation")
+    print("==================================")
     print(f"Dataset: {dataset_folder_name}")
     print(f"Model: {args.model_id}")
     print(f"Annotations file: {args.annotations_file}")
@@ -418,8 +407,8 @@ def main():
     print(f"Saving qualitative data to: {dataset_output_dir}")
     
     # Load dataset
-    print("Loading DICTA25 dataset...")
-    dataset = DICTA25Dataset(args.annotations_file, args.images_folder, transform=None)
+    print("Loading PairTally dataset...")
+    dataset = PairTallyCustomDataset(args.annotations_file, args.images_folder, transform=None)
     print(f"Loaded {len(dataset)} images")
     
     # Store all results in CountGD-compatible format
