@@ -22,7 +22,6 @@ models/learningtocount/
 │   │   └── [FamNet model files]   # Download model weights here
 │   ├── [other FamNet files]
 │   └── requirements.txt
-├── pretrained_models/              # Symlink to LearningToCountEverything/pretrained_models
 ├── evaluate_pairtally_count_both_classes.py
 ├── evaluate_pairtally_count_one_class.py
 ├── run_count_both_classes.sh
@@ -63,7 +62,7 @@ Make sure you have the FamNet dependencies installed:
 
 ```bash
 # Install requirements
-pip install -r /tmp/LearningToCountEverything/requirements.txt
+pip install -r LearningToCountEverything/requirements.txt
 
 # Key dependencies include:
 # - torch
@@ -113,11 +112,11 @@ Based on the paper results, FamNet achieves:
 
 ```
 models/learningtocount/
-├── LearningToCountEverything/      # ✅ Cloned repository
-│   ├── pretrained_models/         # ✅ Original FamNet structure
-│   │   └── [FamNet model files]  # ✅ Downloaded model weights
-│   └── [other FamNet files]       # ✅ Full FamNet codebase
-├── pretrained_models/             # ✅ Symlink to LearningToCountEverything/pretrained_models
-├── outputs/                       # ✅ Created automatically
-└── [evaluation scripts]           # ✅ Already present
+├── LearningToCountEverything/      # Cloned repository
+│   ├── pretrained_models/         # Original FamNet structure
+│   │   └── [FamNet model files]  # Downloaded model weights
+│   └── [other FamNet files]       # Full FamNet codebase
+├── pretrained_models/             # Symlink to LearningToCountEverything/pretrained_models
+├── outputs/                       # Created automatically
+└── [evaluation scripts]           # Already present
 ```

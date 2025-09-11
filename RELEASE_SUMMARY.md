@@ -1,55 +1,55 @@
 # DICTA25 Release Summary
 
-## 🎉 Release Complete!
+## Release Complete!
 
 Your DICTA25 benchmark code has been successfully organized and structured for public release. Here's what has been accomplished:
 
-## ✅ Completed Tasks
+## Completed Tasks
 
-### 1. **Organized Directory Structure** ✅
+### 1. **Organized Directory Structure** [Complete]
 - Created clean, professional directory structure
 - Separated models, dataset, evaluation, and analysis components
 - Follows best practices for research code release
 
-### 2. **Dataset Organization** ✅
+### 2. **Dataset Organization** [Complete]
 - Structured dataset tools and annotations
 - Created comprehensive dataset README with usage instructions
 - Included annotation conversion and validation tools
 
-### 3. **Model Evaluations** ✅
+### 3. **Model Evaluations** [Complete]
 - Organized evaluation scripts for all 9 models:
   - **Object Counting Models**: CountGD, DAVE, GeCo, LearningToCountEverything, LOCA
   - **Vision-Language Models**: Qwen2.5-VL, InternVL3, Llama Vision, Ovis2
 - Created detailed README for each model with setup instructions
 - Included original repository links and citations
 
-### 4. **Documentation** ✅
+### 4. **Documentation** [Complete]
 - Comprehensive main README with project overview
 - Individual README files for each component
 - Clear installation and usage instructions
 - Proper citation information
 
-### 5. **Environment Setup** ✅
+### 5. **Environment Setup** [Complete]
 - Created requirements files for all models
 - Automated environment setup script
 - Proper dependency management
 
-### 6. **Analysis & Visualization** ✅
+### 6. **Analysis & Visualization** [Complete]
 - Organized results analysis scripts
 - Included plotting and visualization tools
 - Summary table generation scripts
 
-### 7. **Examples & Quick Start** ✅
+### 7. **Examples & Quick Start** [Complete]
 - Created quick start example script
 - Step-by-step usage instructions
 - Troubleshooting guidance
 
-### 8. **Licensing** ✅
+### 8. **Licensing** [Complete]
 - Added comprehensive MIT license
 - Included third-party license information
 - Proper attribution for all models
 
-## 📁 Final Directory Structure
+## Final Directory Structure
 
 ```
 DICTA25-Can-AI-Models-Count-Release/
@@ -78,7 +78,7 @@ DICTA25-Can-AI-Models-Count-Release/
 └── requirements/             # Dependencies and environment files
 ```
 
-## 🚀 Next Steps for Release
+## Next Steps for Release
 
 ### 1. **Final Review & Testing**
 - [ ] Test the quick start example script
@@ -109,7 +109,7 @@ DICTA25-Can-AI-Models-Count-Release/
 - [ ] Create contribution guidelines
 - [ ] Prepare for potential user questions and support
 
-## 📊 What's Included
+## What's Included
 
 ### Models Benchmarked (9 total)
 1. **CountGD** - Multi-Modal Open-World Counting (NeurIPS 2024)
@@ -131,7 +131,7 @@ DICTA25-Can-AI-Models-Count-Release/
 - **Visualization and plotting tools**
 - **LaTeX table generation** for papers
 
-## 🎯 Usage Instructions
+## Usage Instructions
 
 ### Quick Start
 ```bash
@@ -158,7 +158,7 @@ cd models/countgd
 # Run evaluation
 ```
 
-## 📈 Expected Impact
+## Expected Impact
 
 This organized release will:
 - **Enable easy reproduction** of your DICTA25 results
@@ -167,18 +167,18 @@ This organized release will:
 - **Support the research community** with comprehensive documentation
 - **Establish DICTA25** as a standard benchmark in the field
 
-## 🏆 Quality Assurance
+## Quality Assurance
 
 The release includes:
-- ✅ Comprehensive documentation for all components
-- ✅ Automated setup and evaluation scripts
-- ✅ Proper error handling and logging
-- ✅ Clear licensing and attribution
-- ✅ Example usage and troubleshooting guides
-- ✅ Standardized code organization
-- ✅ Version control ready structure
+- Comprehensive documentation for all components
+- Automated setup and evaluation scripts
+- Proper error handling and logging
+- Clear licensing and attribution
+- Example usage and troubleshooting guides
+- Standardized code organization
+- Version control ready structure
 
-## 📞 Support
+## Support
 
 The release is designed to be self-contained with:
 - Detailed README files for each component

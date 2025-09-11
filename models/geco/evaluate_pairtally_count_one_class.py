@@ -10,6 +10,10 @@ from tqdm import tqdm
 import pickle
 from PIL import Image
 
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), 'GeCo'))
+
 from models.geco_infer import build_model
 from utils.data import resize_and_pad, xywh_to_x1y1x2y2
 from utils.arg_parser import get_argparser

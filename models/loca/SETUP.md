@@ -17,12 +17,12 @@ The LOCA model repository should be cloned directly into this folder:
 
 ```
 models/loca/
-├── LOCA/                        # Clone LOCA repository here
-│   ├── pretrained_models/      # Original LOCA model directory
+├── loca/                       # Clone repository here (lowercase name)
+│   ├── pretrained_models/     # Original LOCA model directory
 │   │   └── [LOCA model files] # Download model weights here
 │   ├── [other LOCA files]
 │   └── requirements.txt
-├── pretrained_models/          # Symlink to LOCA/pretrained_models
+├── pretrained_models/          # Symlink to loca/pretrained_models
 ├── evaluate_pairtally_count_both_classes.py
 ├── evaluate_pairtally_count_one_class.py
 ├── run_count_both_classes.sh
@@ -35,24 +35,24 @@ models/loca/
 1. **Clone the LOCA repository into this directory**:
    ```bash
    cd models/loca/
-   git clone https://github.com/djukicn/LOCA.git
+   git clone https://github.com/djukicn/LOCA.git loca
    ```
 
 2. **Create symlink for pretrained_models**:
    ```bash
-   ln -s LOCA/pretrained_models pretrained_models
+   ln -s loca/pretrained_models pretrained_models
    ```
 
 3. **Download the LOCA model weights**:
    ```bash
    # Follow LOCA repository instructions to download model weights
-   # Place them in LOCA/pretrained_models/
+   # Place them in loca/pretrained_models/
    # The exact download instructions are in the LOCA repository README
    ```
 
 4. **Install LOCA dependencies**:
    ```bash
-   cd LOCA
+   cd loca
    pip install -r requirements.txt
    cd ..
    ```
@@ -63,7 +63,7 @@ Make sure you have the LOCA dependencies installed:
 
 ```bash
 # Install LOCA requirements
-pip install -r /tmp/LOCA/requirements.txt
+pip install -r loca/requirements.txt
 
 # Key dependencies include:
 # - torch
@@ -113,11 +113,11 @@ Based on the paper results, LOCA achieves:
 
 ```
 models/loca/
-├── LOCA/                           # ✅ Cloned repository
-│   ├── pretrained_models/         # ✅ Original LOCA structure
-│   │   └── [LOCA model files]    # ✅ Downloaded model weights
-│   └── [other LOCA files]         # ✅ Full LOCA codebase
-├── pretrained_models/             # ✅ Symlink to LOCA/pretrained_models
-├── outputs/                       # ✅ Created automatically
-└── [evaluation scripts]           # ✅ Already present
+├── loca/                          # Cloned repository
+│   ├── pretrained_models/        # Original LOCA structure
+│   │   └── [LOCA model files]   # Downloaded model weights
+│   └── [other LOCA files]        # Full LOCA codebase
+├── pretrained_models/             # Symlink to loca/pretrained_models
+├── outputs/                       # Created automatically
+└── [evaluation scripts]           # Already present
 ```

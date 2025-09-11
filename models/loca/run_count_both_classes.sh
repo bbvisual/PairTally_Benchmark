@@ -3,10 +3,10 @@
 # LOCA Combined Evaluation Script for DICTA25
 # This script runs combined evaluation with 2 positive + 1 negative exemplars on the final dataset
 
-echo "🚀 Starting LOCA Combined Evaluation (2 Positive + 1 Negative Exemplars) on FINAL DATASET..."
+echo " Starting LOCA Combined Evaluation (2 Positive + 1 Negative Exemplars) on FINAL DATASET..."
 
 # Default settings
-MODEL_PATH="./pretrained_models"
+MODEL_PATH="loca/pretrained_models"
 MODEL_NAME="loca_few_shot"
 BASE_DATA_PATH="../../dataset/pairtally_dataset"
 OUTPUT_LIMIT=""
@@ -61,34 +61,34 @@ conda activate loca
 # Set CUDA device (change as needed)
 export CUDA_VISIBLE_DEVICES=0
 
-echo "📂 Model path: $MODEL_PATH"
-echo "🎯 Model name: $MODEL_NAME"
-echo "📊 Base data path: $BASE_DATA_PATH"
-echo "🎯 Dataset to evaluate: pairtally_dataset"
+echo " Model path: $MODEL_PATH"
+echo " Model name: $MODEL_NAME"
+echo " Base data path: $BASE_DATA_PATH"
+echo " Dataset to evaluate: pairtally_dataset"
 echo "🔗 Evaluation type: Combined (2 positive + 1 negative exemplars)"
 
 # Check if model exists
 if [ ! -f "$MODEL_PATH/$MODEL_NAME.pt" ]; then
-    echo "❌ Error: Model file $MODEL_PATH/$MODEL_NAME.pt does not exist!"
+    echo " Error: Model file $MODEL_PATH/$MODEL_NAME.pt does not exist!"
     exit 1
 fi
 
-echo "✅ Model file found: $MODEL_PATH/$MODEL_NAME.pt"
+echo " Model file found: $MODEL_PATH/$MODEL_NAME.pt"
 echo ""
 
 # Define paths for final dataset
 DATA_PATH="$BASE_DATA_PATH"
-ANNOTATION_FILE="$DATA_PATH/annotations/pairtally_annotations.json"
+ANNOTATION_FILE="$DATA_PATH/annotations/pairtally_annotations_simple.json"
 IMAGE_DIR="$DATA_PATH/images"
 
 # Check if data path exists
 if [ ! -d "$DATA_PATH" ]; then
-    echo "❌ Warning: Data path $DATA_PATH does not exist!"
+    echo " Warning: Data path $DATA_PATH does not exist!"
     echo "Expected structure:"
     echo "$DATA_PATH/"
     echo "├── images/"
     echo "└── annotations/"
-    echo "    └── pairtally_annotations.json"
+    echo "    └── pairtally_annotations_simple.json"
     echo "Skipping pairtally_dataset..."
     echo ""
     exit 1
@@ -96,7 +96,7 @@ fi
 
 # Check if annotation file exists
 if [ ! -f "$ANNOTATION_FILE" ]; then
-    echo "❌ Warning: Annotation file $ANNOTATION_FILE does not exist!"
+    echo " Warning: Annotation file $ANNOTATION_FILE does not exist!"
     echo "Skipping pairtally_dataset..."
     echo ""
     exit 1
@@ -104,27 +104,27 @@ fi
 
 # Check if image directory exists
 if [ ! -d "$IMAGE_DIR" ]; then
-    echo "❌ Warning: Image directory $IMAGE_DIR does not exist!"
+    echo " Warning: Image directory $IMAGE_DIR does not exist!"
     echo "Skipping pairtally_dataset..."
     echo ""
     exit 1
 fi
 
-echo "✅ Annotation file found: $ANNOTATION_FILE"
-echo "✅ Image directory found: $IMAGE_DIR"
+echo " Annotation file found: $ANNOTATION_FILE"
+echo " Image directory found: $IMAGE_DIR"
 
 # Create results directories for combined evaluation with clear identifiers
 mkdir -p "../../results/LOCA-qualitative-combined/pairtally_dataset"
 mkdir -p "../../results/LOCA-quantitative-combined/pairtally_dataset"
 
-echo "📁 Results will be saved to:"
+echo " Results will be saved to:"
 echo "   Qualitative: ../../results/LOCA-qualitative-combined/pairtally_dataset/"
 echo "   Quantitative: ../../results/LOCA-quantitative-combined/pairtally_dataset/"
 echo ""
 
 # Run combined evaluation with parameters for few-shot LOCA model
 echo "🏃 Running combined evaluation (2 positive + 1 negative exemplars)..."
-python evaluate_DICTA25_combined.py \
+python evaluate_pairtally_count_both_classes.py \
     --annotation_file "$ANNOTATION_FILE" \
     --image_dir "$IMAGE_DIR" \
     --model_name "$MODEL_NAME" \
@@ -145,26 +145,26 @@ python evaluate_DICTA25_combined.py \
     $OUTPUT_LIMIT
 
 if [ $? -eq 0 ]; then
-    echo "🎉 LOCA combined evaluation completed successfully for pairtally_dataset!"
-    echo "📁 Qualitative results saved to: ../../results/LOCA-qualitative-combined/pairtally_dataset/"
-    echo "📊 Quantitative results saved to: ../../results/LOCA-quantitative-combined/pairtally_dataset/"
+    echo " LOCA combined evaluation completed successfully for pairtally_dataset!"
+    echo " Qualitative results saved to: ../../results/LOCA-qualitative-combined/pairtally_dataset/"
+    echo " Quantitative results saved to: ../../results/LOCA-quantitative-combined/pairtally_dataset/"
 else
-    echo "❌ Combined evaluation failed for pairtally_dataset with exit code $?"
+    echo " Combined evaluation failed for pairtally_dataset with exit code $?"
     exit 1
 fi
 
 echo ""
 echo "========================================"
-echo "🎉 Combined evaluation completed!"
+echo " Combined evaluation completed!"
 echo "========================================"
 echo ""
-echo "📋 Summary:"
+echo " Summary:"
 echo "   Dataset: pairtally_dataset"
 echo "   Model: $MODEL_NAME"
 echo "   Evaluation Type: Combined (2 positive + 1 negative exemplars)"
 echo "   Results Location: ../../results/LOCA-*-combined/pairtally_dataset/"
 echo ""
-echo "📄 Files created:"
+echo " Files created:"
 echo "   - combined_qualitative_data.json"
 echo "   - combined_qualitative_data.pkl"
 echo "   - {model_name}_combined_quantitative_results.json"
@@ -179,7 +179,7 @@ if [[ "$CREATE_VIS" =~ ^[Yy]$ ]]; then
             --results_dir "$results_dir" \
             --sample_size 5 2>/dev/null || echo "  Warning: Visualization script not found or failed for pairtally_dataset"
     fi
-    echo "✅ Visualizations created for pairtally_dataset!"
+    echo " Visualizations created for pairtally_dataset!"
     echo "   Location: ../../results/LOCA-qualitative-combined/pairtally_dataset/visualizations/"
 fi
 

@@ -82,7 +82,7 @@ class LatexTableGenerator:
         results_path = self.results_dir / model_info['dir'] / dataset / model_info['file_pattern']
         
         if not results_path.exists():
-            print(f"⚠️  Results not found: {results_path}")
+            print(f"Warning: Results not found: {results_path}")
             return None
             
         try:
@@ -90,7 +90,7 @@ class LatexTableGenerator:
                 data = json.load(f)
             return data
         except Exception as e:
-            print(f"❌ Error loading {model_key} results for {dataset}: {e}")
+            print(f"Error loading {model_key} results for {dataset}: {e}")
             return None
     
     def collect_all_results(self):
@@ -390,18 +390,18 @@ InternVL2-2B \cite{somecitation} & -- & -- & -- \\
     
     def generate_all_tables(self, output_file="latex_tables.tex"):
         """Generate all LaTeX tables and save to file"""
-        print("🚀 Generating LaTeX Tables for DICTA25 Results\n")
+        print("Generating LaTeX Tables for DICTA25 Results\n")
         
         # Collect all results
-        print("📊 Collecting experimental results...")
+        print("Collecting experimental results...")
         all_results = self.collect_all_results()
         
         # Print summary
-        print(f"✅ Found results for {len(all_results)} models:")
+        print(f"Found results for {len(all_results)} models:")
         for model_key, datasets in all_results.items():
             print(f"   {model_key}: {len(datasets)} datasets")
         
-        print("\n📝 Generating LaTeX tables...\n")
+        print("\nGenerating LaTeX tables...\n")
         
         # Generate all tables
         overall_table = self.generate_overall_table(all_results)
@@ -440,7 +440,7 @@ InternVL2-2B \cite{somecitation} & -- & -- & -- \\
         with open(output_file, 'w') as f:
             f.write(full_latex)
         
-        print(f"💾 Saved complete LaTeX document: {output_file}")
+        print(f"Saved complete LaTeX document: {output_file}")
         
         # Also save individual tables
         with open("table_overall.tex", 'w') as f:
@@ -458,7 +458,7 @@ InternVL2-2B \cite{somecitation} & -- & -- & -- \\
         with open("table_super_categories.tex", 'w') as f:
             f.write(super_cats_table)
         
-        print("📄 Individual table files saved:")
+        print("Individual table files saved:")
         print("   - table_overall.tex")
         print("   - table_inter.tex")
         print("   - table_intra.tex") 
@@ -469,7 +469,7 @@ InternVL2-2B \cite{somecitation} & -- & -- & -- \\
     
     def print_results_summary(self, all_results):
         """Print a summary of collected results"""
-        print("\n📈 Results Summary:")
+        print("\nResults Summary:")
         print("=" * 50)
         
         for model_key, datasets in all_results.items():
@@ -497,8 +497,8 @@ def main():
     if args.summary:
         generator.print_results_summary(all_results)
     
-    print("\n✅ LaTeX table generation completed!")
-    print(f"📖 Use the generated tables in your LaTeX document")
+    print("\nLaTeX table generation completed!")
+    print(f"Use the generated tables in your LaTeX document")
 
 if __name__ == '__main__':
     main() 

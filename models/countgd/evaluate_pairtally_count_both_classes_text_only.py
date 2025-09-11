@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), 'CountGD'))
+
 import glob
 import torch
 from PIL import Image
@@ -7,17 +11,15 @@ import argparse
 import json
 import os
 import pickle
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-from matplotlib.patches import Rectangle
+# Visualization imports removed - only saving results dictionaries
 import scipy.ndimage as ndimage
 from torch.utils.data import Dataset, DataLoader
 import time
 import cv2
 
-from util.slconfig import SLConfig, DictAction
-from util.misc import nested_tensor_from_tensor_list
-import datasets_inference.transforms as T
+from CountGD.util.slconfig import SLConfig, DictAction
+from CountGD.util.misc import nested_tensor_from_tensor_list
+import CountGD.datasets_inference.transforms as T
 
 
 # Custom Dataset class for PairTally data (text-only combined)
@@ -112,7 +114,7 @@ def get_args_parser():
     parser.add_argument("--image_folder", required=True)
     parser.add_argument("--dataset_name", required=True)
     parser.add_argument("--confidence_thresh", default=0.3, type=float)
-    parser.add_argument("--save_visualizations", action="store_true", help="Save visualization images")
+    # Removed --save_visualizations argument - only saving results dictionaries
     parser.add_argument("--output_limit", type=int, default=None, help="Limit processing to N images (for testing)")
 
     return parser
@@ -162,7 +164,7 @@ def load_model(args):
     # Build the data transform
     transforms = make_transforms("val")
 
-    from models.registry import MODULE_BUILD_FUNCS
+    from CountGD.models.registry import MODULE_BUILD_FUNCS
 
     build_func = MODULE_BUILD_FUNCS.get(args.modelname)
     model, _, _ = build_func(args)
@@ -222,83 +224,7 @@ def run_combined_text_inference(model, image, pos_prompt, neg_prompt, transform,
     return combined_boxes, combined_logits, pos_boxes, neg_boxes
 
 
-def create_combined_text_visualization(image, combined_boxes, pos_boxes, neg_boxes, pos_prompt, neg_prompt, annotation, save_path):
-    """Create visualization for combined text-only evaluation results"""
-    fig, axes = plt.subplots(2, 2, figsize=(16, 12))
-    
-    # Top left: Positive predictions
-    axes[0,0].imshow(image)
-    w, h = image.size
-    
-    if len(pos_boxes) > 0:
-        # Convert normalized boxes to pixel coordinates
-        pos_boxes_pixel = pos_boxes.clone()
-        pos_boxes_pixel[:, [0, 2]] *= w
-        pos_boxes_pixel[:, [1, 3]] *= h
-        
-        for box in pos_boxes_pixel:
-            x1, y1, x2, y2 = box.cpu().numpy()
-            rect = Rectangle((x1, y1), x2-x1, y2-y1, 
-                           linewidth=2, edgecolor='green', facecolor='none')
-            axes[0,0].add_patch(rect)
-    
-    axes[0,0].set_title(f'Positive: "{pos_prompt}" ({len(pos_boxes)} pred)')
-    
-    # Top right: Negative predictions
-    axes[0,1].imshow(image)
-    
-    if len(neg_boxes) > 0:
-        # Convert normalized boxes to pixel coordinates
-        neg_boxes_pixel = neg_boxes.clone()
-        neg_boxes_pixel[:, [0, 2]] *= w
-        neg_boxes_pixel[:, [1, 3]] *= h
-        
-        for box in neg_boxes_pixel:
-            x1, y1, x2, y2 = box.cpu().numpy()
-            rect = Rectangle((x1, y1), x2-x1, y2-y1, 
-                           linewidth=2, edgecolor='red', facecolor='none')
-            axes[0,1].add_patch(rect)
-    
-    axes[0,1].set_title(f'Negative: "{neg_prompt}" ({len(neg_boxes)} pred)')
-    
-    # Bottom left: Combined predictions
-    axes[1,0].imshow(image)
-    
-    if len(combined_boxes) > 0:
-        # Convert normalized boxes to pixel coordinates
-        combined_boxes_pixel = combined_boxes.clone()
-        combined_boxes_pixel[:, [0, 2]] *= w
-        combined_boxes_pixel[:, [1, 3]] *= h
-        
-        for i, box in enumerate(combined_boxes_pixel):
-            x1, y1, x2, y2 = box.cpu().numpy()
-            # Color code: green for positive, red for negative
-            color = 'green' if i < len(pos_boxes) else 'red'
-            rect = Rectangle((x1, y1), x2-x1, y2-y1, 
-                           linewidth=2, edgecolor=color, facecolor='none')
-            axes[1,0].add_patch(rect)
-    
-    axes[1,0].set_title(f'Combined: {len(combined_boxes)} total objects')
-    
-    # Bottom right: Ground truth (all objects)
-    axes[1,1].imshow(image)
-    
-    # Draw positive ground truth points
-    for point in annotation['points']:
-        axes[1,1].plot(point[0], point[1], 'go', markersize=8, label='Positive GT')
-    
-    # Draw negative ground truth points  
-    for point in annotation['negative_points']:
-        axes[1,1].plot(point[0], point[1], 'ro', markersize=8, label='Negative GT')
-    
-    pos_count = len(annotation['points'])
-    neg_count = len(annotation['negative_points'])
-    total_count = pos_count + neg_count
-    axes[1,1].set_title(f'Ground Truth: {pos_count} pos + {neg_count} neg = {total_count} total')
-    
-    plt.tight_layout()
-    plt.savefig(save_path, dpi=150, bbox_inches='tight')
-    plt.close()
+# Visualization function removed - only saving results dictionaries
 
 
 def main(args):
@@ -318,10 +244,7 @@ def main(args):
     qual_output_dir = "../../results/CountGD-combined-text-only-qualitative"
     dataset_pred_dir = os.path.join(qual_output_dir, dataset_folder_name)
     
-    if args.save_visualizations:
-        vis_output_dir = "../../results/CountGD-combined-text-only-visualizations"
-        dataset_vis_dir = os.path.join(vis_output_dir, dataset_folder_name)
-        os.makedirs(dataset_vis_dir, exist_ok=True)
+    # Visualization directory creation removed - only saving results dictionaries
     
     os.makedirs(dataset_pred_dir, exist_ok=True)
     os.makedirs(dataset_quant_dir, exist_ok=True)
@@ -402,11 +325,7 @@ def main(args):
             }
         }
         
-        # Save visualization if requested
-        if args.save_visualizations:
-            vis_path = os.path.join(dataset_vis_dir, f"{image_name}_combined_text_result.png")
-            create_combined_text_visualization(image, combined_boxes, pos_boxes, neg_boxes, 
-                                             pos_prompt, neg_prompt, annotation, vis_path)
+        # Visualization saving removed - only saving results dictionaries
     
     # Calculate overall metrics
     overall_mae = mae_sum / total_count if total_count > 0 else 0
@@ -467,8 +386,7 @@ def main(args):
     
     print(f"\nQuantitative results saved to: {dataset_quant_dir}")
     print(f"Detailed results saved to: {dataset_pred_dir}")
-    if args.save_visualizations:
-        print(f"Visualizations saved to: {dataset_vis_dir}")
+    # Visualization output message removed
 
 
 if __name__ == "__main__":

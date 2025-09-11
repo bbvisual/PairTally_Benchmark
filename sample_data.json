@@ -1,0 +1,47 @@
+{
+  "OTR_INTRA_NUT1_NUT2_035_060_78bbc3.jpg": {
+    "positive_prompt": "hex nut",
+    "negative_prompt": "square nut",
+    "positive_count": 35,
+    "negative_count": 60,
+    "positive_exemplars": 3,
+    "negative_exemplars": 3,
+    "image_path": "/home/khanhnguyen/PairTally-Benchmark-Release/dataset/pairtally_dataset/images/OTR_INTRA_NUT1_NUT2_035_060_78bbc3.jpg"
+  },
+  "FUN_INTER_PUZ0_CHK0_031_023_340591.jpg": {
+    "positive_prompt": "puzzle piece",
+    "negative_prompt": "checker piece",
+    "positive_count": 31,
+    "negative_count": 23,
+    "positive_exemplars": 3,
+    "negative_exemplars": 3,
+    "image_path": "/home/khanhnguyen/PairTally-Benchmark-Release/dataset/pairtally_dataset/images/FUN_INTER_PUZ0_CHK0_031_023_340591.jpg"
+  },
+  "OFF_INTRA_CRS1_CRS2_055_058_bb1486.jpg": {
+    "positive_prompt": "red or orange craft stick",
+    "negative_prompt": "blue or purple craft stick",
+    "positive_count": 55,
+    "negative_count": 58,
+    "positive_exemplars": 3,
+    "negative_exemplars": 3,
+    "image_path": "/home/khanhnguyen/PairTally-Benchmark-Release/dataset/pairtally_dataset/images/OFF_INTRA_CRS1_CRS2_055_058_bb1486.jpg"
+  },
+  "FOO_INTER_GAR0_PNT1_088_114_88aa7e.jpg": {
+    "positive_prompt": "garlic",
+    "negative_prompt": "peanut with skin",
+    "positive_count": 88,
+    "negative_count": 114,
+    "positive_exemplars": 3,
+    "negative_exemplars": 3,
+    "image_path": "/home/khanhnguyen/PairTally-Benchmark-Release/dataset/pairtally_dataset/images/FOO_INTER_GAR0_PNT1_088_114_88aa7e.jpg"
+  },
+  "FOO_INTER_PAS0_CAN0_286_144_70c532.jpg": {
+    "positive_prompt": "pasta",
+    "negative_prompt": "candy",
+    "positive_count": 286,
+    "negative_count": 144,
+    "positive_exemplars": 3,
+    "negative_exemplars": 3,
+    "image_path": "/home/khanhnguyen/PairTally-Benchmark-Release/dataset/pairtally_dataset/images/FOO_INTER_PAS0_CAN0_286_144_70c532.jpg"
+  }
+}

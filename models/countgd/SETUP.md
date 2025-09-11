@@ -13,17 +13,18 @@ Visit the [CountGD GitHub repository](https://github.com/Niki-Amini-Naieni/Count
 
 ## 2. Setup Directory Structure
 
-The CountGD repository files should be extracted directly into this folder:
+The CountGD repository should be cloned as a subdirectory:
 
 ```
 models/countgd/
-├── checkpoints/                # CountGD model directory
-│   └── checkpoint_fsc147_best.pth  # Download model weights here
-├── config/                     # CountGD config files
-│   └── cfg_fsc147_vit_b.py
-├── pretrained_models/          # Symlink to checkpoints (for consistency)
-├── [other CountGD files]       # All CountGD repository files at this level
-├── requirements.txt            # CountGD requirements
+├── CountGD/                    # Clone repository here
+│   ├── checkpoints/           # CountGD model directory
+│   │   └── checkpoint_fsc147_best.pth  # Download model weights here
+│   ├── config/                # CountGD config files
+│   │   └── cfg_fsc147_vit_b.py
+│   ├── [other CountGD files]  # All CountGD repository files
+│   └── requirements.txt       # CountGD requirements
+├── pretrained_models/          # Symlink to CountGD/checkpoints
 ├── evaluate_pairtally_count_both_classes.py  # Our evaluation scripts
 ├── evaluate_pairtally_count_one_class.py
 ├── evaluate_pairtally_count_both_classes_text_only.py
@@ -36,30 +37,29 @@ models/countgd/
 
 ## 3. Setup Steps
 
-1. **Clone and extract CountGD repository into this directory**:
+1. **Clone the CountGD repository into this directory**:
    ```bash
    cd models/countgd/
-   git clone https://github.com/Niki-Amini-Naieni/CountGD.git temp_countgd
-   mv temp_countgd/* ./
-   mv temp_countgd/.[^.]* ./ 2>/dev/null || true  # Move hidden files if any
-   rm -rf temp_countgd
+   git clone https://github.com/Niki-Amini-Naieni/CountGD.git
    ```
 
 2. **Create symlink for pretrained_models**:
    ```bash
-   ln -s checkpoints pretrained_models
+   ln -s CountGD/checkpoints pretrained_models
    ```
 
 3. **Download the CountGD model weights**:
    ```bash
    # Follow CountGD repository instructions to download checkpoint_fsc147_best.pth
-   # Place it in checkpoints/
+   # Place it in CountGD/checkpoints/
    # The exact download instructions are in the CountGD repository README
    ```
 
 4. **Install CountGD dependencies**:
    ```bash
+   cd CountGD
    pip install -r requirements.txt
+   cd ..
    ```
 
 ## 4. Install Dependencies
@@ -68,7 +68,7 @@ Make sure you have the CountGD dependencies installed:
 
 ```bash
 # Install CountGD requirements
-pip install -r /tmp/CountGD/requirements.txt
+pip install -r CountGD/requirements.txt
 
 # Key dependencies include:
 # - torch
@@ -128,13 +128,14 @@ CountGD supports multiple evaluation modes:
 
 ```
 models/countgd/
-├── checkpoints/                # ✅ CountGD model directory
-│   └── checkpoint_fsc147_best.pth  # ✅ Downloaded model weights
-├── config/                     # ✅ CountGD config files
-│   └── cfg_fsc147_vit_b.py    # ✅ Config file
-├── pretrained_models/          # ✅ Symlink to checkpoints
-├── [other CountGD files]       # ✅ All CountGD repository files
-├── requirements.txt            # ✅ CountGD requirements
-├── outputs/                    # ✅ Created automatically
-└── [evaluation scripts]        # ✅ Already present
+├── CountGD/                    # Cloned repository
+│   ├── checkpoints/           # CountGD model directory
+│   │   └── checkpoint_fsc147_best.pth  # Downloaded model weights
+│   ├── config/                # CountGD config files
+│   │   └── cfg_fsc147_vit_b.py # Config file
+│   ├── [other CountGD files]  # All CountGD repository files
+│   └── requirements.txt       # CountGD requirements
+├── pretrained_models/          # Symlink to CountGD/checkpoints
+├── outputs/                    # Created automatically
+└── [evaluation scripts]        # Already present
 ```

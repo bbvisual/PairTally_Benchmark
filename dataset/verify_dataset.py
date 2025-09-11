@@ -13,7 +13,7 @@ def verify_dataset():
     base_dir = Path(__file__).parent
     dataset_dir = base_dir / "pairtally_dataset"
     
-    print("🔍 Verifying PairTally Dataset Structure...")
+    print("Verifying PairTally Dataset Structure...")
     print(f"Dataset directory: {dataset_dir}")
     
     # Check directory structure
@@ -21,19 +21,19 @@ def verify_dataset():
     images_dir = dataset_dir / "images"
     
     if not dataset_dir.exists():
-        print("❌ ERROR: pairtally_dataset directory not found!")
+        print("ERROR: pairtally_dataset directory not found!")
         print("   Please download and extract the dataset first.")
         return False
     
     if not annotations_dir.exists():
-        print("❌ ERROR: annotations directory not found!")
+        print("ERROR: annotations directory not found!")
         return False
         
     if not images_dir.exists():
-        print("❌ ERROR: images directory not found!")
+        print("ERROR: images directory not found!")
         return False
     
-    print("✅ Directory structure OK")
+    print("Directory structure OK")
     
     # Check annotation files - we now have both simple and augmented versions
     required_simple_files = [
@@ -77,22 +77,22 @@ def verify_dataset():
             common_missing.append(file)
     
     if common_missing:
-        print(f"❌ ERROR: Missing common files: {common_missing}")
+        print(f"ERROR: Missing common files: {common_missing}")
         return False
     
     simple_complete = len(simple_missing) == 0
     augmented_complete = len(augmented_missing) == 0
     
     if simple_complete and augmented_complete:
-        print("✅ All annotation files present (both simple and augmented versions)")
+        print("All annotation files present (both simple and augmented versions)")
     elif simple_complete:
-        print("✅ Simple annotation files complete")
-        print(f"⚠️  Missing augmented files: {augmented_missing}")
+        print("Simple annotation files complete")
+        print(f"WARNING: Missing augmented files: {augmented_missing}")
     elif augmented_complete:
-        print("✅ Augmented annotation files complete")
-        print(f"⚠️  Missing simple files: {simple_missing}")
+        print("Augmented annotation files complete")
+        print(f"WARNING: Missing simple files: {simple_missing}")
     else:
-        print(f"❌ ERROR: Missing files - Simple: {simple_missing}, Augmented: {augmented_missing}")
+        print(f"ERROR: Missing files - Simple: {simple_missing}, Augmented: {augmented_missing}")
         return False
     
     # Check main annotation file (try simple first, then augmented)
@@ -111,16 +111,16 @@ def verify_dataset():
                 annotations = json.load(f)
             
             num_images_anno = len(annotations)
-            print(f"✅ Main annotation file loaded ({version_used}): {num_images_anno} images")
+            print(f"Main annotation file loaded ({version_used}): {num_images_anno} images")
             
             if num_images_anno != 681:
-                print(f"⚠️  WARNING: Expected 681 images, found {num_images_anno}")
+                print(f"WARNING: Expected 681 images, found {num_images_anno}")
         
         except Exception as e:
-            print(f"❌ ERROR: Could not load main annotation file: {e}")
+            print(f"ERROR: Could not load main annotation file: {e}")
             return False
     else:
-        print("❌ ERROR: No main annotation file available")
+        print("ERROR: No main annotation file available")
         return False
     
     # Check images
@@ -128,27 +128,27 @@ def verify_dataset():
     num_images = len(image_files)
     
     if num_images == 0:
-        print("❌ ERROR: No images found!")
-        print("\n📥 DOWNLOAD REQUIRED:")
+        print("ERROR: No images found!")
+        print("\nDOWNLOAD REQUIRED:")
         print("   The PairTally images are not included in this repository.")
         print("   Please download them from Google Drive:")
         print("   https://drive.google.com/file/d/1TnenXS4yFicjo81NnmClfzgc8ltmmeBv/view")
-        print("\n📋 Setup Instructions:")
+        print("\nSetup Instructions:")
         print("   1. Download PairTally-Images-Only.zip")
         print("   2. Extract: unzip PairTally-Images-Only.zip")
         print("   3. Move images: mv PairTally-Images-Only/* dataset/pairtally_dataset/images/")
         print("   4. Re-run: python verify_dataset.py")
         return False
     elif num_images != 681:
-        print(f"⚠️  WARNING: Expected 681 images, found {num_images}")
+        print(f"WARNING: Expected 681 images, found {num_images}")
         if num_images < 681:
             print("   Some images may be missing from your download.")
     else:
-        print(f"✅ Found {num_images} image files")
+        print(f"Found {num_images} image files")
     
     # Check if annotation and image counts match
     if num_images != num_images_anno:
-        print(f"⚠️  WARNING: Annotation count ({num_images_anno}) != Image count ({num_images})")
+        print(f"WARNING: Annotation count ({num_images_anno}) != Image count ({num_images})")
     
     # Check subset files
     # Check INTER and INTRA subsets (use same version as main)
@@ -165,15 +165,15 @@ def verify_dataset():
         with open(intra_file, 'r') as f:
             intra_data = json.load(f)
             
-        print(f"✅ INTER subset: {len(inter_data)} images")
-        print(f"✅ INTRA subset: {len(intra_data)} images") 
-        print(f"✅ Total subsets: {len(inter_data) + len(intra_data)} images")
+        print(f"INTER subset: {len(inter_data)} images")
+        print(f"INTRA subset: {len(intra_data)} images") 
+        print(f"Total subsets: {len(inter_data) + len(intra_data)} images")
         
         if len(inter_data) + len(intra_data) != num_images_anno:
-            print("⚠️  WARNING: Subset counts don't add up to total")
+            print("WARNING: Subset counts don't add up to total")
             
     except Exception as e:
-        print(f"❌ ERROR: Could not verify subset files: {e}")
+        print(f"ERROR: Could not verify subset files: {e}")
         return False
     
     # Sample verification
@@ -181,9 +181,9 @@ def verify_dataset():
     sample_path = images_dir / sample_image
     
     if sample_path.exists():
-        print(f"✅ Sample image verification: {sample_image} exists")
+        print(f"Sample image verification: {sample_image} exists")
     else:
-        print(f"❌ ERROR: Sample image missing: {sample_image}")
+        print(f"ERROR: Sample image missing: {sample_image}")
         return False
     
     # Verify annotation structure
@@ -193,14 +193,14 @@ def verify_dataset():
     
     missing_keys = [key for key in required_keys if key not in sample_anno]
     if missing_keys:
-        print(f"❌ ERROR: Sample annotation missing keys: {missing_keys}")
+        print(f"ERROR: Sample annotation missing keys: {missing_keys}")
         return False
     
-    print("✅ Sample annotation structure OK")
+    print("Sample annotation structure OK")
     
     # Check original CVAT annotations (now in same directory)
     cvat_files_found = 0
-    print("\n📋 Checking original CVAT annotations...")
+    print("\nChecking original CVAT annotations...")
     
     cvat_files = ["bbx_anno_valid.json", "parsed_annotations.json", "image_metadata.json"]
     for cvat_file in cvat_files:
@@ -210,26 +210,26 @@ def verify_dataset():
                 with open(annotations_dir / cvat_file, 'r') as f:
                     cvat_data = json.load(f)
                 if cvat_file == "bbx_anno_valid.json":
-                    print(f"  ✅ {cvat_file}: {len(cvat_data)} images")
+                    print(f"  {cvat_file}: {len(cvat_data)} images")
                 elif cvat_file == "parsed_annotations.json":
-                    print(f"  ✅ {cvat_file}: {len(cvat_data)} images")
+                    print(f"  {cvat_file}: {len(cvat_data)} images")
                 else:
-                    print(f"  ✅ {cvat_file}: metadata available")
+                    print(f"  {cvat_file}: metadata available")
             except Exception as e:
-                print(f"  ⚠️  {cvat_file}: could not load ({e})")
+                print(f"  WARNING: {cvat_file}: could not load ({e})")
         else:
-            print(f"  ❌ {cvat_file}: not found")
+            print(f"  {cvat_file}: not found")
     
-    print("\n🎉 SUCCESS: PairTally dataset verification complete!")
+    print("\nSUCCESS: PairTally dataset verification complete!")
     print("\nDataset Summary:")
-    print(f"  📁 Total images: {num_images}")
-    print(f"  📋 PairTally annotations: {num_images_anno}")
-    print(f"  🔄 INTER-category: {len(inter_data)}")
-    print(f"  🔄 INTRA-category: {len(intra_data)}")
-    print(f"  📋 CVAT files found: {cvat_files_found}/3")
-    print(f"  📍 Location: {dataset_dir}")
+    print(f"  Total images: {num_images}")
+    print(f"  PairTally annotations: {num_images_anno}")
+    print(f"  INTER-category: {len(inter_data)}")
+    print(f"  INTRA-category: {len(intra_data)}")
+    print(f"  CVAT files found: {cvat_files_found}/3")
+    print(f"  Location: {dataset_dir}")
     
-    print("\n✅ Ready to run evaluations!")
+    print("\nReady to run evaluations!")
     return True
 
 if __name__ == "__main__":

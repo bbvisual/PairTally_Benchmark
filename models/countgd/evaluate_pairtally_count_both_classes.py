@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), 'CountGD'))
+
 import glob
 import torch
 from PIL import Image
@@ -7,17 +11,15 @@ import argparse
 import json
 import os
 import pickle
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-from matplotlib.patches import Rectangle
+# Visualization imports removed - only saving results dictionaries
 import scipy.ndimage as ndimage
 from torch.utils.data import Dataset, DataLoader
 import time
 import cv2
 
-from util.slconfig import SLConfig, DictAction
-from util.misc import nested_tensor_from_tensor_list
-import datasets_inference.transforms as T
+from CountGD.util.slconfig import SLConfig, DictAction
+from CountGD.util.misc import nested_tensor_from_tensor_list
+import CountGD.datasets_inference.transforms as T
 
 
 # Custom Dataset class for PairTally data (count both classes evaluation)
@@ -131,7 +133,7 @@ def get_args_parser():
     parser.add_argument("--image_folder", required=True)
     parser.add_argument("--dataset_name", required=True)
     parser.add_argument("--confidence_thresh", default=0.3, type=float)
-    parser.add_argument("--save_visualizations", action="store_true", help="Save visualization images")
+    # Removed --save_visualizations argument - only saving results dictionaries
     parser.add_argument("--output_limit", type=int, default=None, help="Limit processing to N images (for testing)")
 
     return parser
@@ -181,7 +183,7 @@ def load_model(args):
     # Build the data transform
     transforms = make_transforms("val")
 
-    from models.registry import MODULE_BUILD_FUNCS
+    from CountGD.models.registry import MODULE_BUILD_FUNCS
 
     build_func = MODULE_BUILD_FUNCS.get(args.modelname)
     model, _, _ = build_func(args)
@@ -240,72 +242,7 @@ def run_combined_inference(model, image, positive_exemplars, negative_exemplars,
     return boxes, logits
 
 
-def create_combined_visualization(image, pred_boxes, pos_exemplars, neg_exemplars, annotation, save_path):
-    """Create visualization for combined evaluation results"""
-    fig, axes = plt.subplots(1, 3, figsize=(24, 8))
-    
-    # Original image with exemplars
-    axes[0].imshow(image)
-    w, h = image.size
-    
-    # Draw positive exemplars in green
-    for box in pos_exemplars:
-        # box is in format [x1, y1, x2, y2]
-        x1, y1, x2, y2 = box
-        width = x2 - x1
-        height = y2 - y1
-        rect = Rectangle((x1, y1), width, height, 
-                        linewidth=3, edgecolor='green', facecolor='none', label='Positive Exemplar')
-        axes[0].add_patch(rect)
-    
-    # Draw negative exemplars in red
-    for box in neg_exemplars:
-        # box is in format [x1, y1, x2, y2]
-        x1, y1, x2, y2 = box
-        width = x2 - x1
-        height = y2 - y1
-        rect = Rectangle((x1, y1), width, height, 
-                        linewidth=3, edgecolor='red', facecolor='none', label='Negative Exemplar')
-        axes[0].add_patch(rect)
-    
-    axes[0].set_title(f'Input: {len(pos_exemplars)} Pos + {len(neg_exemplars)} Neg Exemplars')
-    axes[0].legend()
-    
-    # Predicted detections
-    axes[1].imshow(image)
-    if len(pred_boxes) > 0:
-        # Convert normalized boxes to pixel coordinates
-        pred_boxes_pixel = pred_boxes.clone()
-        pred_boxes_pixel[:, [0, 2]] *= w
-        pred_boxes_pixel[:, [1, 3]] *= h
-        
-        for box in pred_boxes_pixel:
-            x1, y1, x2, y2 = box.cpu().numpy()
-            rect = Rectangle((x1, y1), x2-x1, y2-y1, 
-                           linewidth=2, edgecolor='blue', facecolor='none')
-            axes[1].add_patch(rect)
-    
-    axes[1].set_title(f'Predictions: {len(pred_boxes)} objects')
-    
-    # Ground truth (all objects)
-    axes[2].imshow(image)
-    
-    # Draw positive ground truth points
-    for point in annotation['points']:
-        axes[2].plot(point[0], point[1], 'go', markersize=8, label='Positive GT')
-    
-    # Draw negative ground truth points
-    for point in annotation['negative_points']:
-        axes[2].plot(point[0], point[1], 'ro', markersize=8, label='Negative GT')
-    
-    pos_count = len(annotation['points'])
-    neg_count = len(annotation['negative_points'])
-    total_count = pos_count + neg_count
-    axes[2].set_title(f'Ground Truth: {pos_count} pos + {neg_count} neg = {total_count} total')
-    
-    plt.tight_layout()
-    plt.savefig(save_path, dpi=150, bbox_inches='tight')
-    plt.close()
+# Visualization function removed - only saving results dictionaries
 
 
 def main(args):
@@ -325,10 +262,7 @@ def main(args):
     qual_output_dir = "../../results/CountGD-count-both-classes-qualitative"
     dataset_pred_dir = os.path.join(qual_output_dir, dataset_folder_name)
     
-    if args.save_visualizations:
-        vis_output_dir = "../../results/CountGD-count-both-classes-visualizations"
-        dataset_vis_dir = os.path.join(vis_output_dir, dataset_folder_name)
-        os.makedirs(dataset_vis_dir, exist_ok=True)
+    # Visualization directory creation removed - only saving results dictionaries
     
     os.makedirs(dataset_pred_dir, exist_ok=True)
     os.makedirs(dataset_quant_dir, exist_ok=True)
@@ -406,10 +340,7 @@ def main(args):
             }
         }
         
-        # Save visualization if requested
-        if args.save_visualizations:
-            vis_path = os.path.join(dataset_vis_dir, f"{image_name}_combined_result.png")
-            create_combined_visualization(image, pred_boxes, pos_exemplars, neg_exemplars, annotation, vis_path)
+        # Visualization saving removed - only saving results dictionaries
     
     # Calculate overall metrics
     overall_mae = mae_sum / total_count if total_count > 0 else 0
@@ -471,8 +402,7 @@ def main(args):
     
     print(f"\nQuantitative results saved to: {dataset_quant_dir}")
     print(f"Detailed results saved to: {dataset_pred_dir}")
-    if args.save_visualizations:
-        print(f"Visualizations saved to: {dataset_vis_dir}")
+    # Visualization output message removed
 
 
 if __name__ == "__main__":

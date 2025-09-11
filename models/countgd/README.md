@@ -74,13 +74,13 @@ wget -P checkpoints https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b
 
 ### Evaluation Modes
 
-**🔀 Combined Mode** (`evaluate_DICTA25_combined.py`):
+**Combined Mode** (`evaluate_DICTA25_combined.py`):
 - Provides **2 positive exemplars + 1 negative exemplar** per image
 - Asks model to count **both object classes simultaneously**
 - Tests ability to distinguish between different object types in the same scene
 - More challenging as model must handle distractors
 
-**🎯 Custom Mode** (`evaluate_DICTA25_custom.py`):
+** Custom Mode** (`evaluate_DICTA25_custom.py`):
 - Provides **positive exemplars only** for the target class
 - Asks model to count **one class at a time**
 - Simpler task focusing on counting accuracy for a single object type

@@ -31,7 +31,7 @@ rm PairTally-Images-Only.zip  # optional
 cd dataset
 python verify_dataset.py
 
-# Expected output: "✅ Ready to run evaluations!"
+# Expected output: "Ready to run evaluations!"
 ```
 
 ## What You'll Get
@@ -81,13 +81,13 @@ dataset/pairtally_dataset/
 ### Verification Script Output
 
 The `verify_dataset.py` script checks:
-- ✅ Directory structure exists
-- ✅ All annotation files present (simple & augmented versions)
-- ✅ Main annotation files load correctly (681 images)
-- ✅ Image files present (681 .jpg files)
-- ✅ INTER/INTRA subsets correct (368 + 313 = 681)
-- ✅ CVAT format files available
-- ✅ Sample annotations valid
+- Directory structure exists
+- All annotation files present (simple & augmented versions)
+- Main annotation files load correctly (681 images)
+- Image files present (681 .jpg files)
+- INTER/INTRA subsets correct (368 + 313 = 681)
+- CVAT format files available
+- Sample annotations valid
 
 ## Next Steps
 

@@ -131,7 +131,7 @@ VLMs require significant GPU memory:
 
 ```
 models/vlms/
-├── outputs/                         # ✅ Created automatically
-├── [evaluation scripts]             # ✅ Already present
-└── [model cache]                    # ✅ Downloaded automatically to ~/.cache/huggingface/
+├── outputs/                         # Created automatically
+├── [evaluation scripts]             # Already present
+└── [model cache]                    # Downloaded automatically to ~/.cache/huggingface/
 ```

@@ -21,16 +21,9 @@
 </p>
 
 ---
-
-## Abstract
-
-Visual counting is a fundamental yet challenging task, especially when users need to count objects of a specific type in complex scenes. While recent models, including class-agnostic counting models and large vision-language models (VLMs), show promise in counting tasks, their ability to perform fine-grained, intent-driven counting remains unclear. 
-
-We introduce **PairTally**, a benchmark dataset specifically designed to evaluate fine-grained visual counting. Each of the 681 high-resolution images contains two object categories, requiring models to distinguish and count based on subtle differences in shape, size, color, or semantics. The dataset includes both inter-category (distinct categories) and intra-category (closely related subcategories) settings, making it suitable for rigorous evaluation of selective counting capabilities.
-
 ## Key Contributions
 
-- **Systematic Benchmark**: 681 high-resolution images with controlled pairs requiring fine-grained discrimination
+- **First Fine-Grained Counting Benchmark**: Introduces the first dataset specifically designed to test subtle within-class distinctions, with 681 high-resolution, controlled pairs.
 - **Comprehensive Evaluation**: Assessment of 10 state-of-the-art models across three counting paradigms
 - **Diagnostic Analysis**: Reveals critical limitations in current vision models for intent-driven counting
 - **Real-world Relevance**: Addresses scenarios where accurate counting depends on subtle visual distinctions

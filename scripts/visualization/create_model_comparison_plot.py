@@ -60,7 +60,7 @@ class ModelComparisonVisualizer:
         data_path = self.results_dir / model_info['dir'] / self.dataset_name / 'positive_qualitative_data.json'
         
         if not data_path.exists():
-            print(f"⚠️  Warning: {model_name} data not found at {data_path}")
+            print(f"Warning: {model_name} data not found at {data_path}")
             return None
             
         try:
@@ -109,13 +109,13 @@ class ModelComparisonVisualizer:
                         }
                         converted_data['images'].append(converted_entry)
                 
-                print(f"✅ Loaded {model_name}: {len(converted_data['images'])} images")
+                print(f"Loaded {model_name}: {len(converted_data['images'])} images")
                 return converted_data
             else:
-            print(f"✅ Loaded {model_name}: {len(data['images'])} images")
+            print(f"Loaded {model_name}: {len(data['images'])} images")
             return data
         except Exception as e:
-            print(f"❌ Error loading {model_name}: {e}")
+            print(f"Error loading {model_name}: {e}")
             return None
     
     def parse_filename(self, filename):
@@ -203,7 +203,7 @@ class ModelComparisonVisualizer:
             print(f"{model_name}: {len(image_names)} images")
         
         common_images = set.intersection(*image_sets)
-        print(f"\n🔍 Found {len(common_images)} common images across all models")
+        print(f"\nFound {len(common_images)} common images across all models")
         
         if not common_images:
             raise ValueError("No common images found across all models!")
@@ -228,11 +228,11 @@ class ModelComparisonVisualizer:
             # Load DAVE's processed image from DAVE results directory
             # DAVE saves images with .jpg.png extension (PNG versions of JPG files)
             dave_image_path = Path(f"/home/khanhnguyen/DICTA25-RESULTS/DAVE-qualitative/{self.dataset_name}/images/{image_name}.png")
-            print(f"🔍 Loading DAVE image from: {dave_image_path}")
+            print(f"Loading DAVE image from: {dave_image_path}")
             if dave_image_path.exists():
                 return Image.open(dave_image_path)
             else:
-                print(f"⚠️  DAVE image not found at: {dave_image_path}")
+                print(f"Warning: DAVE image not found at: {dave_image_path}")
                 # Fallback to original image
                 return self.load_original_image(image_name)
         
@@ -277,7 +277,7 @@ class ModelComparisonVisualizer:
         if density_path.exists():
             return np.load(density_path)
         else:
-            print(f"⚠️  Density map not found for {model_name}: {density_path}")
+            print(f"Warning: Density map not found for {model_name}: {density_path}")
             return None
     
     def draw_bounding_boxes(self, ax, boxes, color, alpha=0.7, linewidth=1):
@@ -401,12 +401,12 @@ class ModelComparisonVisualizer:
                             hspace=0.05, wspace=0.02)
         if save_path:
             fig.savefig(save_path, dpi=300, bbox_inches='tight', pad_inches=0.01)
-            print(f"📊 Saved comparison plot: {save_path}")
+            print(f"Saved comparison plot: {save_path}")
         return fig
     
     def create_specific_image_comparison(self, image_name, save_path=None):
         """Create comparison for a specific image"""
-        print(f"🎯 Creating comparison for specific image: {image_name}")
+        print(f"Creating comparison for specific image: {image_name}")
         
         # Load data for all models
         all_data = {}
@@ -433,11 +433,11 @@ class ModelComparisonVisualizer:
                 for img in data['images']:
                     available_images.add(img['image_name'])
             
-            print(f"❌ Image '{image_name}' not found!")
+            print(f"Error: Image '{image_name}' not found!")
             print(f"Available images (first 10): {list(available_images)[:10]}")
             return None, None, None
         
-        print(f"📊 Found data for {len(image_data)} models")
+        print(f"Found data for {len(image_data)} models")
         
         # Create visualization
         fig = self.create_comparison_plot(image_name, image_data, save_path)
@@ -446,7 +446,7 @@ class ModelComparisonVisualizer:
     
     def run_comparison(self, random_seed=None, save_dir=None):
         """Run the complete comparison workflow"""
-        print("🚀 Starting Model Comparison Visualization\n")
+        print("Starting Model Comparison Visualization\n")
         
         # Set random seed for reproducibility
         if random_seed:
@@ -458,11 +458,11 @@ class ModelComparisonVisualizer:
         
         # Select random image
         selected_image = random.choice(common_images)
-        print(f"\n🎲 Randomly selected image: {selected_image}")
+        print(f"\nRandomly selected image: {selected_image}")
         
         # Get data for selected image
         image_data = self.get_image_data(all_data, selected_image)
-        print(f"📊 Found data for {len(image_data)} models")
+        print(f"Found data for {len(image_data)} models")
         
         # Create visualization
         fig = self.create_comparison_plot(selected_image, image_data)
@@ -473,7 +473,7 @@ class ModelComparisonVisualizer:
             save_dir.mkdir(exist_ok=True)
             save_path = save_dir / f"model_comparison_{os.path.splitext(selected_image)[0]}.png"
             fig.savefig(save_path, dpi=300, bbox_inches='tight')
-            print(f"💾 Saved to: {save_path}")
+            print(f"Saved to: {save_path}")
         
         plt.show()
         return fig, selected_image, image_data
@@ -516,7 +516,7 @@ def main():
             save_dir.mkdir(exist_ok=True)
             save_path = save_dir / f"model_comparison_{os.path.splitext(args.image_name)[0]}.png"
             fig.savefig(save_path, dpi=300, bbox_inches='tight', pad_inches=0.01)
-            print(f"💾 Saved to: {save_path}")
+            print(f"Saved to: {save_path}")
         
         plt.show()
     else:

@@ -1,1 +1,52 @@
+# Image files
 *.jpg
+*.jpeg
+*.png
+
+# Large model repositories (should be cloned separately)
+models/*/CountGD/
+models/*/GeCo/
+models/*/DAVE/
+models/*/LearningToCountEverything/
+models/*/loca/
+
+# Model weights and checkpoints
+*/pretrained_models/
+*/checkpoints/
+*/MODEL_folder/
+*.pth
+*.pt
+*.ckpt
+
+# Output directories
+/results
+*/outputs/
+*/logs/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Virtual environments
+venv/
+env/
+.env
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
+nohup.out

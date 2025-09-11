@@ -6,9 +6,7 @@ import argparse
 import json
 import os
 import pickle
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-from matplotlib.patches import Rectangle
+# Unused visualization imports removed - only saving results dictionaries
 import scipy.ndimage as ndimage
 from torch.utils.data import Dataset, DataLoader
 import time

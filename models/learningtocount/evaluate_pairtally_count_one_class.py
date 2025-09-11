@@ -16,6 +16,10 @@ from PIL import Image
 import copy
 import torch.optim as optim
 
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), 'LearningToCountEverything'))
+
 from model import CountRegressor, Resnet50FPN
 from utils import MAPS, Scales, Transform, extract_features
 from utils import MincountLoss, PerturbationLoss

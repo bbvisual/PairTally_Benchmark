@@ -14,6 +14,10 @@ from tqdm import tqdm
 import pickle
 from PIL import Image
 
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), 'DAVE'))
+
 from models.dave import build_model
 from utils.arg_parser import get_argparser
 from torchvision import transforms as T

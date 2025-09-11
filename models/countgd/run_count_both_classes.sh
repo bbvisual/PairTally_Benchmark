@@ -4,7 +4,7 @@
 # This script runs combined evaluation with 2 positive + 1 negative exemplars and combined prompts
 # Standard CountGD model (with exemplar boxes + text prompts)
 
-echo "🚀 Starting CountGD Count Both Classes Evaluation..."
+echo " Starting CountGD Count Both Classes Evaluation..."
 
 # ===== CONFIGURATION SECTION =====
 # Change BASE_DATA_PATH here and everything else will update automatically
@@ -14,9 +14,9 @@ BASE_DATA_PATH="../../dataset/pairtally_dataset"
 DATASET_NAME=$(basename "$BASE_DATA_PATH")
 
 # Other settings
-MODEL_PATH="./checkpoints"
+MODEL_PATH="CountGD/checkpoints"
 MODEL_NAME="checkpoint_fsc147_best"
-CONFIG_FILE="./config/cfg_fsc147_vit_b.py"
+CONFIG_FILE="CountGD/config/cfg_fsc147_vit_b.py"
 CONFIDENCE_THRESH="0.3"
 OUTPUT_LIMIT=""
 
@@ -79,43 +79,43 @@ conda activate countgd
 # Set CUDA device (change as needed)
 export CUDA_VISIBLE_DEVICES=0
 
-echo "📂 Model path: $MODEL_PATH"
-echo "🎯 Model name: $MODEL_NAME"
-echo "📁 Config file: $CONFIG_FILE"
-echo "📊 Base data path: $BASE_DATA_PATH"
-echo "🎯 Dataset to evaluate: $DATASET_NAME"
-echo "🎚️ Confidence threshold: $CONFIDENCE_THRESH"
-echo "📝 Mode: Combined (2 positive + 1 negative exemplars + combined prompts)"
+echo " Model path: $MODEL_PATH"
+echo " Model name: $MODEL_NAME"
+echo " Config file: $CONFIG_FILE"
+echo " Base data path: $BASE_DATA_PATH"
+echo " Dataset to evaluate: $DATASET_NAME"
+echo " Confidence threshold: $CONFIDENCE_THRESH"
+echo " Mode: Combined (2 positive + 1 negative exemplars + combined prompts)"
 
 # Check if model exists
 if [ ! -f "$MODEL_PATH/$MODEL_NAME.pth" ]; then
-    echo "❌ Error: Model file $MODEL_PATH/$MODEL_NAME.pth does not exist!"
+    echo " Error: Model file $MODEL_PATH/$MODEL_NAME.pth does not exist!"
     exit 1
 fi
 
 # Check if config file exists
 if [ ! -f "$CONFIG_FILE" ]; then
-    echo "❌ Error: Config file $CONFIG_FILE does not exist!"
+    echo " Error: Config file $CONFIG_FILE does not exist!"
     exit 1
 fi
 
-echo "✅ Model file found: $MODEL_PATH/$MODEL_NAME.pth"
-echo "✅ Config file found: $CONFIG_FILE"
+echo " Model file found: $MODEL_PATH/$MODEL_NAME.pth"
+echo " Config file found: $CONFIG_FILE"
 echo ""
 
 # Define paths for final dataset
 DATA_PATH="$BASE_DATA_PATH"
-ANNOTATION_FILE="$DATA_PATH/annotations/pairtally_annotations.json"
+ANNOTATION_FILE="$DATA_PATH/annotations/pairtally_annotations_simple.json"
 IMAGE_FOLDER="$DATA_PATH/images"
 
 # Check if data path exists
 if [ ! -d "$DATA_PATH" ]; then
-    echo "❌ Warning: Data path $DATA_PATH does not exist!"
+    echo " Warning: Data path $DATA_PATH does not exist!"
     echo "Expected structure:"
     echo "$DATA_PATH/"
     echo "├── images/"
     echo "└── annotations/"
-    echo "    └── pairtally_annotations.json"
+    echo "    └── pairtally_annotations_simple.json"
     echo "Skipping $DATASET_NAME..."
     echo ""
     exit 1
@@ -123,7 +123,7 @@ fi
 
 # Check if annotation file exists
 if [ ! -f "$ANNOTATION_FILE" ]; then
-    echo "❌ Warning: Annotation file $ANNOTATION_FILE does not exist!"
+    echo " Warning: Annotation file $ANNOTATION_FILE does not exist!"
     echo "Skipping $DATASET_NAME..."
     echo ""
     exit 1
@@ -131,14 +131,14 @@ fi
 
 # Check if image directory exists
 if [ ! -d "$IMAGE_FOLDER" ]; then
-    echo "❌ Warning: Image directory $IMAGE_FOLDER does not exist!"
+    echo " Warning: Image directory $IMAGE_FOLDER does not exist!"
     echo "Skipping $DATASET_NAME..."
     echo ""
     exit 1
 fi
 
-echo "✅ Annotation file found: $ANNOTATION_FILE"
-echo "✅ Image directory found: $IMAGE_FOLDER"
+echo " Annotation file found: $ANNOTATION_FILE"
+echo " Image directory found: $IMAGE_FOLDER"
 
 # Create output directory
 OUTPUT_DIR="./outputs"
@@ -168,13 +168,13 @@ python evaluate_pairtally_count_both_classes.py \
     $OUTPUT_LIMIT
 
 if [ $? -eq 0 ]; then
-    echo "🎉 CountGD combined evaluation completed successfully for $DATASET_NAME!"
-    echo "📁 Results saved to:"
+    echo " CountGD combined evaluation completed successfully for $DATASET_NAME!"
+    echo " Results saved to:"
     echo "  Predictions: $OUTPUT_DIR/${DATASET_NAME}_combined_predictions/"
     echo "  Quantitative: $OUTPUT_DIR/${DATASET_NAME}_combined_quantitative/"
     echo "  Visualizations: $OUTPUT_DIR/${DATASET_NAME}_combined_visualizations/"
 else
-    echo "❌ Evaluation failed for $DATASET_NAME with exit code $?"
+    echo " Evaluation failed for $DATASET_NAME with exit code $?"
     exit 1
 fi
 
@@ -183,4 +183,4 @@ echo "========================================"
 echo "All evaluations completed!"
 echo "========================================"
 
-echo "🎉 CountGD Combined evaluation complete!"
+echo " CountGD Combined evaluation complete!"

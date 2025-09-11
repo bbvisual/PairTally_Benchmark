@@ -35,17 +35,17 @@ echo "========================================="
 
 # Check if conda is available
 if ! command -v conda &> /dev/null; then
-    echo "❌ Conda is not available. Please install Miniconda or Anaconda first."
+    echo " Conda is not available. Please install Miniconda or Anaconda first."
     exit 1
 fi
 
 # Create CountGD environment
 echo "Creating CountGD environment..."
 if conda info --envs | grep -q "^countgd "; then
-    echo "✓ CountGD environment already exists"
+    echo " CountGD environment already exists"
 else
     conda create -n countgd python=3.9.19 -y
-    echo "✓ Created CountGD environment"
+    echo " Created CountGD environment"
 fi
 
 # Activate and install basic requirements
@@ -55,7 +55,7 @@ conda activate countgd
 echo "Installing basic requirements..."
 pip install torch torchvision torchaudio numpy matplotlib pillow tqdm
 
-echo "✓ CountGD environment setup completed"
+echo " CountGD environment setup completed"
 echo ""
 
 echo "Step 2: Preparing dataset..."
@@ -64,9 +64,9 @@ echo "============================="
 cd "$PROJECT_ROOT/dataset"
 
 if [ -f "annotations/parsed_annotations.json" ]; then
-    echo "✓ Dataset annotations found"
+    echo " Dataset annotations found"
 else
-    echo "❌ Dataset annotations not found!"
+    echo " Dataset annotations not found!"
     echo "Please ensure the dataset is properly downloaded and placed in the dataset/ directory"
     exit 1
 fi

@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), 'CountGD'))
+
 import glob
 import random
 import torch
@@ -8,17 +12,15 @@ import argparse
 import json
 import os
 import pickle
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-from matplotlib.patches import Rectangle
+# Visualization imports removed - only saving results dictionaries
 import scipy.ndimage as ndimage
 from torch.utils.data import Dataset, DataLoader
 import time
 import cv2
 
-from util.slconfig import SLConfig, DictAction
-from util.misc import nested_tensor_from_tensor_list
-import datasets_inference.transforms as T
+from CountGD.util.slconfig import SLConfig, DictAction
+from CountGD.util.misc import nested_tensor_from_tensor_list
+import CountGD.datasets_inference.transforms as T
 
 
 # CountOneClass Dataset class for PairTally data
@@ -194,7 +196,7 @@ def build_model_and_transforms(args):
         ]
     )
     cfg = SLConfig.fromfile(args.config)
-    cfg.merge_from_dict({"text_encoder_type": "checkpoints/bert-base-uncased"})
+    cfg.merge_from_dict({"text_encoder_type": "CountGD/checkpoints/bert-base-uncased"})
     cfg_dict = cfg._cfg_dict.to_dict()
     args_vars = vars(args)
     for k, v in cfg_dict.items():
@@ -211,7 +213,7 @@ def build_model_and_transforms(args):
     random.seed(seed)
 
     # we use register to maintain models from catdet6 on.
-    from models.registry import MODULE_BUILD_FUNCS
+    from CountGD.models.registry import MODULE_BUILD_FUNCS
 
     assert args.modelname in MODULE_BUILD_FUNCS._module_dict
 
@@ -281,89 +283,10 @@ def run_inference(model, image, prompt, exemplar_boxes, transform, args):
     return boxes, logits
 
 
-def create_detection_visualization(image, boxes, title, save_path):
-    """Create visualization of detections"""
-    fig, ax = plt.subplots(1, 1, figsize=(12, 8))
-    ax.imshow(image)
-    
-    # Convert normalized boxes to pixel coordinates
-    w, h = image.size
-    for box in boxes:
-        x1, y1, x2, y2 = box
-        x1, y1, x2, y2 = x1 * w, y1 * h, x2 * w, y2 * h
-        
-        # Draw bounding box
-        rect = Rectangle((x1, y1), x2 - x1, y2 - y1, 
-                        linewidth=2, edgecolor='red', facecolor='none')
-        ax.add_patch(rect)
-    
-    ax.set_title(f"{title} - Count: {len(boxes)}")
-    ax.axis('off')
-    plt.tight_layout()
-    plt.savefig(save_path, dpi=150, bbox_inches='tight')
-    plt.close()
+# Visualization function removed - only saving results dictionaries
 
 
-def create_comparison_visualization(image, pos_boxes, neg_boxes, pos_exemplars, neg_exemplars, save_path):
-    """Create side-by-side comparison visualization"""
-    fig, axes = plt.subplots(1, 3, figsize=(20, 8))
-    
-    # Original image with exemplars
-    axes[0].imshow(image)
-    w, h = image.size
-    
-    # Draw positive exemplars in green (already in absolute coordinates)
-    for box in pos_exemplars:
-        x1, y1, x2, y2 = box
-        rect = Rectangle((x1, y1), x2 - x1, y2 - y1, 
-                        linewidth=2, edgecolor='green', facecolor='none')
-        axes[0].add_patch(rect)
-    
-    # Draw negative exemplars in blue (already in absolute coordinates)
-    for box in neg_exemplars:
-        x1, y1, x2, y2 = box
-        rect = Rectangle((x1, y1), x2 - x1, y2 - y1, 
-                        linewidth=2, edgecolor='blue', facecolor='none')
-        axes[0].add_patch(rect)
-    
-    axes[0].set_title("Original Image with Exemplars\n(Green: Positive, Blue: Negative)")
-    axes[0].axis('off')
-    
-    # Positive detections (model outputs normalized [cx, cy, w, h] coordinates)
-    axes[1].imshow(image)
-    for box in pos_boxes:
-        cx, cy, box_w, box_h = box
-        # Convert from [cx, cy, w, h] to [x1, y1, x2, y2] and scale to image size
-        x1 = (cx - box_w/2) * w
-        y1 = (cy - box_h/2) * h
-        x2 = (cx + box_w/2) * w
-        y2 = (cy + box_h/2) * h
-        rect = Rectangle((x1, y1), x2 - x1, y2 - y1, 
-                        linewidth=2, edgecolor='red', facecolor='none')
-        axes[1].add_patch(rect)
-    
-    axes[1].set_title(f"Positive Detections\nCount: {len(pos_boxes)}")
-    axes[1].axis('off')
-    
-    # Negative detections (model outputs normalized [cx, cy, w, h] coordinates)
-    axes[2].imshow(image)
-    for box in neg_boxes:
-        cx, cy, box_w, box_h = box
-        # Convert from [cx, cy, w, h] to [x1, y1, x2, y2] and scale to image size
-        x1 = (cx - box_w/2) * w
-        y1 = (cy - box_h/2) * h
-        x2 = (cx + box_w/2) * w
-        y2 = (cy + box_h/2) * h
-        rect = Rectangle((x1, y1), x2 - x1, y2 - y1, 
-                        linewidth=2, edgecolor='orange', facecolor='none')
-        axes[2].add_patch(rect)
-    
-    axes[2].set_title(f"Negative Detections\nCount: {len(neg_boxes)}")
-    axes[2].axis('off')
-    
-    plt.tight_layout()
-    plt.savefig(save_path, dpi=150, bbox_inches='tight')
-    plt.close()
+# Visualization function removed - only saving results dictionaries
 
 
 def save_qualitative_data(img_tensor, exemplar_bboxes, pred_bboxes, pred_scores, img_id, img_name, 

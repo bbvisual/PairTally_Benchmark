@@ -27,39 +27,39 @@ setup_environment() {
     
     # Check if environment already exists
     if conda info --envs | grep -q "^$env_name "; then
-        echo "⚠️  Environment '$env_name' already exists. Skipping..."
+        echo "Environment '$env_name' already exists. Skipping..."
         return 0
     fi
     
     # Create conda environment
     if conda create -n "$env_name" python="$python_version" -y; then
-        echo "✓ Created conda environment: $env_name"
+        echo "Created conda environment: $env_name"
         
         # Activate environment and install requirements
         if eval "$(conda shell.bash hook)" && conda activate "$env_name"; then
-            echo "✓ Activated environment: $env_name"
+            echo "Activated environment: $env_name"
             
             if [ -f "$requirements_file" ]; then
                 echo "Installing requirements from $requirements_file..."
                 if pip install -r "$requirements_file"; then
-                    echo "✓ Requirements installed successfully"
+                    echo "Requirements installed successfully"
                 else
-                    echo "✗ Failed to install requirements"
+                    echo "Failed to install requirements"
                     return 1
                 fi
             else
-                echo "⚠️  Requirements file not found: $requirements_file"
+                echo "Warning: Requirements file not found: $requirements_file"
                 echo "Manual setup required for this environment"
             fi
             
             conda deactivate
-            echo "✓ $env_name environment setup completed"
+            echo "$env_name environment setup completed"
         else
-            echo "✗ Failed to activate environment: $env_name"
+            echo "Failed to activate environment: $env_name"
             return 1
         fi
     else
-        echo "✗ Failed to create environment: $env_name"
+        echo "Failed to create environment: $env_name"
         return 1
     fi
     

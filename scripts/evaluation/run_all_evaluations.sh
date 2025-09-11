@@ -43,21 +43,21 @@ run_evaluation() {
     echo "==========================================="
     
     if eval "$(conda shell.bash hook)" && conda activate "$env_name"; then
-        echo "✓ Successfully activated environment: $env_name"
+        echo "Successfully activated environment: $env_name"
         
         if bash "$script_path"; then
-            echo "✓ $model_name evaluation completed successfully!"
+            echo "$model_name evaluation completed successfully!"
             echo "End time: $(date)"
             ((SUCCESSFUL_MODELS++))
         else
-            echo "✗ ERROR: $model_name evaluation failed!"
+            echo "ERROR: $model_name evaluation failed!"
             echo "End time: $(date)"
             ((FAILED_MODELS++))
         fi
         
         conda deactivate
     else
-        echo "✗ ERROR: Failed to activate environment: $env_name"
+        echo "ERROR: Failed to activate environment: $env_name"
         ((FAILED_MODELS++))
     fi
     
@@ -123,7 +123,7 @@ echo "Failed: $FAILED_MODELS"
 echo ""
 
 if [ $SUCCESSFUL_MODELS -eq $TOTAL_MODELS ]; then
-    echo "🎉 ALL EVALUATIONS COMPLETED SUCCESSFULLY!"
+    echo "ALL EVALUATIONS COMPLETED SUCCESSFULLY!"
     echo ""
     echo "Next steps:"
     echo "1. Run analysis: ./scripts/evaluation/analyze_results.sh"
@@ -132,11 +132,11 @@ if [ $SUCCESSFUL_MODELS -eq $TOTAL_MODELS ]; then
     
     exit 0
 elif [ $SUCCESSFUL_MODELS -gt 0 ]; then
-    echo "⚠️  PARTIAL SUCCESS: $SUCCESSFUL_MODELS/$TOTAL_MODELS models completed"
+    echo "PARTIAL SUCCESS: $SUCCESSFUL_MODELS/$TOTAL_MODELS models completed"
     echo "Check individual model logs above for failure details."
     exit 1
 else
-    echo "💥 ALL EVALUATIONS FAILED!"
+    echo "ALL EVALUATIONS FAILED!"
     echo "Check environment setup and model dependencies."
     exit 2
 fi

@@ -13,14 +13,16 @@ Visit the [GeCo GitHub repository](https://github.com/JakubPelhan/GeCo) and down
 
 ## 2. Setup Directory Structure
 
-The GeCo repository files should be extracted directly into this folder:
+The GeCo repository should be cloned as a subdirectory:
 
 ```
 models/geco/
-├── pretrained_models/          # GeCo model directory
-│   └── GeCo_updated.pth       # Download model weights here
-├── [other GeCo files]          # All GeCo repository files at this level
-├── requirements.txt            # GeCo requirements
+├── GeCo/                       # Clone repository here
+│   ├── pretrained_models/     # GeCo model directory
+│   │   └── GeCo_updated.pth  # Download model weights here
+│   ├── [other GeCo files]     # All GeCo repository files
+│   └── requirements.txt       # GeCo requirements
+├── pretrained_models/          # Symlink to GeCo/pretrained_models
 ├── evaluate_pairtally_count_both_classes.py  # Our evaluation scripts
 ├── evaluate_pairtally_count_one_class.py
 ├── run_count_both_classes.sh
@@ -30,19 +32,15 @@ models/geco/
 
 ## 3. Setup Steps
 
-1. **Clone and extract GeCo repository into this directory**:
+1. **Clone the GeCo repository into this directory**:
    ```bash
    cd models/geco/
-   git clone https://github.com/JakubPelhan/GeCo.git temp_geco
-   mv temp_geco/* ./
-   mv temp_geco/.[^.]* ./ 2>/dev/null || true  # Move hidden files if any
-   rm -rf temp_geco
+   git clone https://github.com/JakubPelhan/GeCo.git
    ```
 
-2. **Create symlink for pretrained_models (if needed)**:
+2. **Create symlink for pretrained_models**:
    ```bash
-   # GeCo may already have pretrained_models directory
-   # If not, create it: mkdir -p pretrained_models
+   ln -s GeCo/pretrained_models pretrained_models
    ```
 
 3. **Download the GeCo model weights**:
@@ -65,7 +63,7 @@ Make sure you have the GeCo dependencies installed:
 
 ```bash
 # Install GeCo requirements
-pip install -r /tmp/GeCo/requirements.txt
+pip install -r GeCo/requirements.txt
 
 # Key dependencies include:
 # - torch
@@ -116,11 +114,11 @@ Based on the paper results, GeCo achieves:
 
 ```
 models/geco/
-├── GeCo/                           # ✅ Cloned repository
-│   ├── pretrained_models/         # ✅ Original GeCo structure
-│   │   └── GeCo_updated.pth      # ✅ Downloaded model weights
-│   └── [other GeCo files]         # ✅ Full GeCo codebase
-├── pretrained_models/             # ✅ Symlink to GeCo/pretrained_models
-├── outputs/                       # ✅ Created automatically
-└── [evaluation scripts]           # ✅ Already present
+├── GeCo/                           # Cloned repository
+│   ├── pretrained_models/         # Original GeCo structure
+│   │   └── GeCo_updated.pth      # Downloaded model weights
+│   └── [other GeCo files]         # Full GeCo codebase
+├── pretrained_models/             # Symlink to GeCo/pretrained_models
+├── outputs/                       # Created automatically
+└── [evaluation scripts]           # Already present
 ```
