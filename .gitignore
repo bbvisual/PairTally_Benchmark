@@ -1,7 +1,6 @@
 # Image files
 *.jpg
 *.jpeg
-*.png
 
 # Large model repositories (should be cloned separately)
 models/*/CountGD/
