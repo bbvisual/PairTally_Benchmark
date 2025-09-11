@@ -41,6 +41,10 @@
 | Inter-category pairs | 50 |
 | Intra-category pairs | 47 |
 
+<p align="center">
+  <img src="img/statistics.png" alt="PairTally Dataset Statistics" width="100%">
+</p>
+
 ### Structure
 
 ```
