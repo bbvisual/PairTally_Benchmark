@@ -48,11 +48,11 @@ mkdir -p material
 python -m pip install 'git+https://github.com/facebookresearch/detectron2.git'
 ```
 
-## DICTA25 Evaluation
+## PairTally Evaluation
 
 ### Files in this Directory
 
-- `evaluate_DICTA25_combined.py` - Main evaluation script for DICTA25 dataset
+- `evaluate_DICTA25_combined.py` - Main evaluation script for PairTally dataset
 - `evaluate_DICTA25_custom.py` - Custom evaluation with specific configurations
 - `run_combined_eval.sh` - Shell script to run the evaluation
 - `README.md` - This file
@@ -66,9 +66,9 @@ cp run_combined_eval.sh /path/to/DAVE/
 ```
 
 2. **Update paths in the evaluation scripts:**
-Edit the scripts to point to your DICTA25 dataset location:
+Edit the scripts to point to your PairTally dataset location:
 ```python
-base_data_path = "/path/to/DICTA25-Can-AI-Models-Count-Release/dataset"
+base_data_path = "/path/to/PairTally-Benchmark-Release/dataset"
 ```
 
 3. **Configure model paths:**
@@ -101,7 +101,7 @@ DAVE uses a detect-and-verify paradigm:
 
 Results are saved to:
 ```
-/path/to/results/DAVE-DICTA25-Results/
+/path/to/results/DAVE-PairTally-Results/
 ├── DAVE-quantitative/             # Quantitative metrics
 │   └── annotations/
 │       └── results.json
@@ -115,7 +115,7 @@ Results are saved to:
 
 ### Expected Performance
 
-DAVE performance on DICTA25:
+DAVE performance on PairTally:
 - **Overall MAE**: X.XX
 - **Overall RMSE**: X.XX  
 - **Best performing category**: HOU (Household)

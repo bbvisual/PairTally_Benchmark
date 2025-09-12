@@ -49,10 +49,18 @@ dataset/pairtally_dataset/
 ├── annotations/
 │   ├── pairtally_annotations_simple.json      # 681 images, simple prompts
 │   ├── pairtally_annotations_augmented.json   # 681 images, detailed prompts
-│   ├── pairtally_annotations_inter_simple.json     # INTER subset
-│   ├── pairtally_annotations_intra_simple.json     # INTRA subset
-│   ├── pairtally_splits_simple.json           # Dataset splits
+│   ├── pairtally_annotations_inter_simple.json     # INTER subset (simple)
+│   ├── pairtally_annotations_inter_augmented.json  # INTER subset (augmented)
+│   ├── pairtally_annotations_intra_simple.json     # INTRA subset (simple)
+│   ├── pairtally_annotations_intra_augmented.json  # INTRA subset (augmented)
+│   ├── pairtally_splits_simple.json           # Dataset splits (simple)
+│   ├── pairtally_splits_augmented.json        # Dataset splits (augmented)
+│   ├── pairtally_splits_inter_simple.json     # INTER splits (simple)
+│   ├── pairtally_splits_inter_augmented.json  # INTER splits (augmented)
+│   ├── pairtally_splits_intra_simple.json     # INTRA splits (simple)
+│   ├── pairtally_splits_intra_augmented.json  # INTRA splits (augmented)
 │   ├── bbx_anno_valid.json                    # Original CVAT format
+│   ├── parsed_annotations.json                # Subset CVAT format (legacy)
 │   ├── image_metadata.json                    # Comprehensive metadata
 │   └── filename_mapping.json                  # Original to compact mapping
 └── images/                                     # 681 image files

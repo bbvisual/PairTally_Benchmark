@@ -56,7 +56,7 @@ wget -P checkpoints https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b
 # Place as: checkpoints/checkpoint_fsc147_best.pth
 ```
 
-## DICTA25 Evaluation
+## PairTally Evaluation
 
 ### Files in this Directory
 
@@ -141,7 +141,7 @@ The evaluation uses the following key parameters:
 
 Results are saved to:
 ```
-/path/to/results/CountGD-DICTA25-Results/
+/path/to/results/CountGD-PairTally-Results/
 ├── CountGD-quantitative/          # Quantitative metrics
 │   └── annotations/
 │       └── results.json
@@ -155,7 +155,7 @@ Results are saved to:
 
 ### Expected Performance
 
-CountGD performance on DICTA25:
+CountGD performance on PairTally:
 - **Overall MAE**: X.XX
 - **Overall RMSE**: X.XX
 - **Best performing category**: FOO (Food)

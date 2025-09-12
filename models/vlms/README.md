@@ -218,10 +218,11 @@ huggingface-cli login
 If you use these VLM evaluations, please cite:
 
 ```bibtex
-@inproceedings{pairtally2025,
-  title={Can Current AI Models Count What We Mean, Not What They See? A Benchmark and Systematic Evaluation},
-  author={[Author Names]},
-  booktitle={Proceedings of DICTA 2025},
+@inproceedings{nguyen2025pairtally,
+  title={Can Current AI Models Count What We Mean, Not What They See? 
+         A Benchmark and Systematic Evaluation},
+  author={Nguyen, Gia Khanh and Huang, Yifeng and Hoai, Minh},
+  booktitle={Digital Image Computing: Techniques and Applications (DICTA)},
   year={2025}
 }
 ```

@@ -22,14 +22,22 @@ dataset/
 ├── README.md                    # This file
 ├── pairtally_dataset/       # PairTally-compatible format (RECOMMENDED)
 │   ├── annotations/
-│   │   ├── pairtally_annotations.json      # Main annotation file (681 images)
-│   │   ├── pairtally_annotations_inter.json # INTER-category only (368 images)  
-│   │   ├── pairtally_annotations_intra.json # INTRA-category only (313 images)
-│   │   ├── Train_Test_Val_FSC_147.json     # Dataset splits (all in 'test')
-│   │   ├── Train_Test_Val_FSC_147_inter.json # INTER splits
-│   │   ├── Train_Test_Val_FSC_147_intra.json # INTRA splits
-│   │   ├── filename_mapping.json           # Original to compact name mapping
-│   │   └── image_metadata.json             # Comprehensive image metadata
+│   │   ├── pairtally_annotations_simple.json      # Main annotation file (681 images) - simple prompts
+│   │   ├── pairtally_annotations_augmented.json   # Main annotation file (681 images) - detailed prompts
+│   │   ├── pairtally_annotations_inter_simple.json # INTER-category only (368 images) - simple prompts
+│   │   ├── pairtally_annotations_inter_augmented.json # INTER-category only (368 images) - detailed prompts  
+│   │   ├── pairtally_annotations_intra_simple.json # INTRA-category only (313 images) - simple prompts
+│   │   ├── pairtally_annotations_intra_augmented.json # INTRA-category only (313 images) - detailed prompts
+│   │   ├── pairtally_splits_simple.json           # Dataset splits for simple format
+│   │   ├── pairtally_splits_augmented.json        # Dataset splits for augmented format
+│   │   ├── pairtally_splits_inter_simple.json     # INTER splits for simple format
+│   │   ├── pairtally_splits_inter_augmented.json  # INTER splits for augmented format
+│   │   ├── pairtally_splits_intra_simple.json     # INTRA splits for simple format
+│   │   ├── pairtally_splits_intra_augmented.json  # INTRA splits for augmented format
+│   │   ├── bbx_anno_valid.json                    # Original CVAT format (681 images)
+│   │   ├── parsed_annotations.json                # Subset CVAT format (legacy)
+│   │   ├── filename_mapping.json                  # Original to compact name mapping
+│   │   └── image_metadata.json                    # Comprehensive image metadata
 │   └── images/        # 681 images with compact filenames
 ├── annotations/                 # Original CVAT annotation files
 │   ├── bbx_anno_valid.json     # Complete annotations (681 images) - CVAT format
@@ -284,17 +292,18 @@ Models are evaluated using:
 
 ## Citation
 
-If you use the DICTA25 dataset, please cite:
+If you use the PairTally dataset, please cite:
 
 ```bibtex
-@inproceedings{your-name2025dicta25,
-  title={Can Current AI Models Count What We Mean, Not What They See? A Benchmark and Systematic Evaluation},
-  author={Your Name and Co-authors},
-  booktitle={Proceedings of the International Conference on Digital Image Computing: Techniques and Applications (DICTA)},
+@inproceedings{nguyen2025pairtally,
+  title={Can Current AI Models Count What We Mean, Not What They See? 
+         A Benchmark and Systematic Evaluation},
+  author={Nguyen, Gia Khanh and Huang, Yifeng and Hoai, Minh},
+  booktitle={Digital Image Computing: Techniques and Applications (DICTA)},
   year={2025}
 }
 ```
 
 ## License
 
-The DICTA25 dataset is released under [appropriate license]. Please see the main repository LICENSE file for details.
+This dataset is released under the [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/) license for academic research purposes.

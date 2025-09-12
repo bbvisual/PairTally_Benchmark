@@ -1,6 +1,6 @@
 # GeCo - A Novel Unified Architecture for Low-Shot Counting
 
-This directory contains the evaluation setup for GeCo (NeurIPS 2024) on the DICTA25 dataset.
+This directory contains the evaluation setup for GeCo (NeurIPS 2024) on the PairTally dataset.
 
 ## Original Paper
 **A Novel Unified Architecture for Low-Shot Counting by Detection and Segmentation**  

@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="https://arxiv.org/abs/xxxx.xxxxx">Paper</a> •
+  <a href="#citation">Paper</a> •
   <a href="#installation">Installation</a> •
   <a href="#dataset">Dataset</a> •
   <a href="#evaluation">Evaluation</a> •
@@ -241,6 +241,6 @@ We thank the Australian Institute for Machine Learning and Stony Brook Universit
 
 <p align="center">
   <a href="https://github.com/bbvisual/PairTally_Benchmark">GitHub</a> •
-  <a href="https://arxiv.org/abs/xxxx.xxxxx">Paper</a> •
+  <a href="#citation">Paper</a> •
   <a href="https://drive.google.com/file/d/1TnenXS4yFicjo81NnmClfzgc8ltmmeBv/view">Dataset</a>
 </p>
