@@ -66,8 +66,11 @@ PairTally/
 | Shape/Texture | 42.5% | Spiral vs. penne pasta |
 | Size | 14.1% | Large vs. small marbles |
 
-## Installation
+## Quick Start with Demo Notebook
 
+**Get started in minutes!** Explore the dataset and run evaluations through our interactive Jupyter notebook.
+
+### 1. Basic Setup
 ```bash
 # Clone repository
 git clone https://github.com/bbvisual/PairTally_Benchmark.git
@@ -77,64 +80,58 @@ cd PairTally_Benchmark
 conda create -n pairtally python=3.8
 conda activate pairtally
 
-# Install dependencies
-pip install -r requirements.txt
+# Install basic requirements
+pip install jupyter numpy pandas matplotlib pillow tqdm
+```
 
-# Download dataset
-python download_dataset.py
+### 2. Download Dataset
+```bash
+# Download images from Google Drive
+# Link: https://drive.google.com/file/d/1TnenXS4yFicjo81NnmClfzgc8ltmmeBv/view
+# Extract PairTally-Images-Only.zip
 
-# Verify installation
+# Move images to correct location
+unzip PairTally-Images-Only.zip
+mv PairTally-Images-Only/* dataset/pairtally_dataset/images/
+
+# Verify setup
+cd dataset
 python verify_dataset.py
 ```
 
-## Quick Start
-
-```python
-from pairtally import PairTallyDataset
-
-# Initialize dataset
-dataset = PairTallyDataset(data_dir='./dataset')
-
-# Load sample
-image, annotation = dataset[0]
-
-# Access annotation details
-positive_class = annotation['positive_prompt']  # e.g., "red poker chips"
-negative_class = annotation['negative_prompt']  # e.g., "blue poker chips"
-positive_count = len(annotation['points'])
-negative_count = len(annotation['negative_points'])
+### 3. Launch Interactive Notebook
+```bash
+# Start Jupyter notebook
+jupyter notebook PairTally_Demo_Notebook.ipynb
 ```
 
-## Evaluation
+**The notebook provides:**
+- Dataset visualization and statistics
+- Sample annotations and bounding boxes  
+- Model evaluation pipeline
+- Performance analysis tools
+- Result generation and plotting
 
-### Running Evaluation
+## Alternative: Python API
 
 ```python
-from pairtally import evaluate_model
+import json
+from PIL import Image
+import matplotlib.pyplot as plt
 
-# Load your model
-model = YourCountingModel()
+# Load annotations
+with open('dataset/pairtally_dataset/annotations/pairtally_annotations_simple.json', 'r') as f:
+    annotations = json.load(f)
 
-# Evaluate on full dataset
-results = evaluate_model(
-    model=model,
-    dataset=dataset,
-    subset='all'  # Options: 'all', 'inter', 'intra'
-)
+# Load and visualize sample
+image_name = list(annotations.keys())[0]
+annotation = annotations[image_name]
 
-# Access metrics
-print(f"MAE: {results['mae']:.2f}")
-print(f"RMSE: {results['rmse']:.2f}")
-print(f"NAE: {results['nae']:.2f}")
+print(f"Positive class: {annotation['positive_prompt']}")
+print(f"Negative class: {annotation['negative_prompt']}")
+print(f"Positive count: {len(annotation['points'])}")
+print(f"Negative count: {len(annotation['negative_points'])}")
 ```
-
-### Model Categories Evaluated
-
-| Category | Models | Input Type |
-|----------|--------|------------|
-| Exemplar-based | FamNet, DAVE, GeCo, LoCA | 3 bounding box exemplars |
-| Language-prompted | CountGD, LLMDet | Text prompts (category names) |
-| Vision-Language | Ovis2, Qwen2.5-VL, LLaMA-3.2, InternVL3 | Natural language instructions |
 
 ## Results
 
@@ -195,20 +192,6 @@ print(f"NAE: {results['nae']:.2f}")
 3. **Attribute Hierarchy**: Color differences are most distinguishable, size differences most challenging
 4. **VLM Performance**: Large vision-language models underperform specialized counting methods
 5. **Overcounting Bias**: Models frequently count all objects rather than following specific prompts
-
-## Demo Notebook
-
-Explore the dataset and evaluation pipeline through our interactive notebook:
-
-```bash
-jupyter notebook PairTally_Demo_Notebook.ipynb
-```
-
-The notebook provides:
-- Dataset visualization and statistics
-- Sample annotations and bounding boxes
-- Model evaluation pipeline
-- Performance analysis tools
 
 ## Citation
 
