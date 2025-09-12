@@ -133,6 +133,88 @@ print(f"Positive count: {len(annotation['points'])}")
 print(f"Negative count: {len(annotation['negative_points'])}")
 ```
 
+## Model Evaluation Code
+
+The evaluation scripts for all models from the paper are available in the `models/` directory. Each model has its own subfolder with setup instructions and evaluation scripts:
+
+```
+models/
+├── countgd/         # CountGD - Multi-Modal Open-World Counting
+├── dave/            # DAVE - Detect-and-Verify Paradigm  
+├── geco/            # GeCo - Unified Architecture for Low-Shot Counting
+├── loca/            # LoCA - Learning to Count Everything
+├── learningtocount/ # FamNet - Learning to Count Everything  
+└── vlms/            # Vision-Language Models (Qwen2.5-VL, LLaMA-3.2, InternVL3, Ovis2)
+```
+
+**Quick Setup:**
+1. Navigate to the model directory: `cd models/<model_name>/`
+2. Follow the setup instructions in the model's README.md
+3. Run the evaluation scripts provided
+
+**Example:**
+```bash
+# Evaluate CountGD
+cd models/countgd/
+# Follow models/countgd/README.md for setup
+python evaluate_DICTA25_combined.py
+
+# Evaluate Vision-Language Models
+cd models/vlms/  
+# Follow models/vlms/README.md for setup
+python evaluate_pairtally_qwen2_5vl_count_both_classes.py
+```
+
+For detailed setup instructions, model-specific requirements, and evaluation parameters, see the README files in each model directory.
+
+## Evaluate Your Own Model
+
+Want to evaluate your own counting model on PairTally? We provide a complete template and example script:
+
+### Quick Start Template
+1. **Copy the evaluation template**: `evaluate_custom_model_template.py`
+2. **Follow the setup guide**: `CUSTOM_MODEL_EVALUATION_TEMPLATE.md`
+3. **Implement your model interface**:
+
+```python
+class YourCountingModel:
+    def predict(self, image, exemplars, prompt=None):
+        # Your model inference code
+        return predicted_count
+```
+
+### Example Implementation (GeCo-style)
+```python
+def predict(self, image, exemplars, prompt=None):
+    # Preprocess image and exemplars
+    image_tensor = self.transform(image).unsqueeze(0).to(self.device)
+    exemplar_boxes = torch.tensor(exemplars).float().to(self.device)
+    
+    with torch.no_grad():
+        outputs = self.model(image_tensor, exemplar_boxes)
+        count = outputs['count'].item()
+    
+    return int(round(count))
+```
+
+### Run Evaluation
+```bash
+# 1. Modify the template for your model
+cp evaluate_custom_model_template.py evaluate_my_model.py
+# Edit evaluate_my_model.py to implement your model
+
+# 2. Update paths and run
+python evaluate_my_model.py
+```
+
+**Template includes:**
+- Standard evaluation metrics (MAE, RMSE, NAE)
+- Proper data loading and preprocessing
+- Results saving and analysis
+- Error handling and debugging tips
+
+See `CUSTOM_MODEL_EVALUATION_TEMPLATE.md` for detailed instructions and examples.
+
 ## Results
 
 ### Overall Performance (All Objects Counting)
