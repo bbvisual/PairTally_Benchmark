@@ -86,8 +86,8 @@ pip install jupyter numpy pandas matplotlib pillow tqdm
 
 ### 2. Download Dataset
 ```bash
-# Download images from Google Drive
-# Link: https://drive.google.com/file/d/1TnenXS4yFicjo81NnmClfzgc8ltmmeBv/view
+# Download images from Google Drive using gdown
+gdown --fuzzy "https://drive.google.com/file/d/1TnenXS4yFicjo81NnmClfzgc8ltmmeBv/view"
 # Extract PairTally-Images-Only.zip
 
 # Move images to correct location
