@@ -162,7 +162,6 @@ python evaluate_pairtally_count_both_classes_text_only.py \
     --pretrain_model_path "$MODEL_PATH/$MODEL_NAME.pth" \
     --confidence_thresh "$CONFIDENCE_THRESH" \
     --save_path "$OUTPUT_DIR" \
-    --save_visualizations \
     --device cuda \
     --eval \
     $OUTPUT_LIMIT

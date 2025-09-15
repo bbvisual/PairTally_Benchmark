@@ -162,7 +162,6 @@ python evaluate_pairtally_count_both_classes.py \
     --pretrain_model_path "$MODEL_PATH/$MODEL_NAME.pth" \
     --confidence_thresh "$CONFIDENCE_THRESH" \
     --save_path "$OUTPUT_DIR" \
-    --save_visualizations \
     --device cuda \
     --eval \
     $OUTPUT_LIMIT
@@ -172,7 +171,6 @@ if [ $? -eq 0 ]; then
     echo " Results saved to:"
     echo "  Predictions: $OUTPUT_DIR/${DATASET_NAME}_combined_predictions/"
     echo "  Quantitative: $OUTPUT_DIR/${DATASET_NAME}_combined_quantitative/"
-    echo "  Visualizations: $OUTPUT_DIR/${DATASET_NAME}_combined_visualizations/"
 else
     echo " Evaluation failed for $DATASET_NAME with exit code $?"
     exit 1
