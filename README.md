@@ -52,8 +52,6 @@ PairTally/
 ├── images/                    # 681 high-resolution images
 ├── annotations/
 │   ├── pairtally_annotations_simple.json
-│   ├── pairtally_annotations_inter_simple.json
-│   ├── pairtally_annotations_intra_simple.json
 │   └── image_metadata.json
 └── evaluation/                # Evaluation scripts and tools
 ```
@@ -144,6 +142,7 @@ models/
 ├── geco/            # GeCo - Unified Architecture for Low-Shot Counting
 ├── loca/            # LoCA - Learning to Count Everything
 ├── learningtocount/ # FamNet - Learning to Count Everything  
+├── llmdet/          # LLMDET
 └── vlms/            # Vision-Language Models (Qwen2.5-VL, LLaMA-3.2, InternVL3, Ovis2)
 ```
 
