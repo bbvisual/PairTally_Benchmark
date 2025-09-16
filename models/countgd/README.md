@@ -54,6 +54,7 @@ wget -P checkpoints https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b
 # Download CountGD model weights
 # Download from: https://drive.google.com/file/d/1RbRcNLsOfeEbx6u39pBehqsgQiexHHrI/view?usp=sharing
 # Place as: checkpoints/checkpoint_fsc147_best.pth
+gdown 1RbRcNLsOfeEbx6u39pBehqsgQiexHHrI
 ```
 
 ## PairTally Evaluation

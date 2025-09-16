@@ -35,6 +35,78 @@ class PairTallyDataset(Dataset):
         
         self.image_files = list(self.annotations.keys())
         
+        # Class code to text description mapping
+        self.class_mapping = {
+            "FOO": {
+                "PAS": ["pasta", "spiral pasta", "penne pasta"],
+                "RIC": ["rice grain", "jasmine rice grain", "brown rice grain"],
+                "LIM": ["citrus fruit", "lime", "calamansi"],
+                "PEP": ["peppercorn", "black peppercorn", "white peppercorn"],
+                "TOM": ["tomato", "normal tomato", "baby tomato"],
+                "CHI": ["chili", "long chili", "short chili"],
+                "PNT": ["peanut", "peanut with skin", "peanut without skin"],
+                "BEA": ["bean", "black bean", "soy bean"],
+                "SED": ["seed", "pumpkin seed", "sunflower seed"],
+                "CFC": ["coffee candy", "brown coffee candy", "black coffee candy"],
+                "ONI": ["shallot"],
+                "CAN": ["candy"],
+                "GAR": ["garlic"]
+            },
+            "FUN": {
+                "CHK": ["checker piece", "black checker piece", "white checker piece"],
+                "MAH": ["mahjong tile", "bamboo mahjong tile", "character mahjong tile"],
+                "LEG": ["lego piece", "green lego piece", "light pink lego piece"],
+                "CHS": ["chess piece", "black chess piece", "white chess piece"],
+                "PZP": ["puzzle piece", "edge puzzle piece", "center puzzle piece"],
+                "PUZ": ["puzzle piece", "edge puzzle piece", "center puzzle piece"],
+                "PKC": ["poker chip", "blue poker chip", "white poker chip"],
+                "PLC": ["playing card", "red playing card", "black playing card"],
+                "MAR": ["marble", "big marble", "small marble"],
+                "DIC": ["dice", "green dice", "white dice"],
+                "CSC": ["chinese slim card", "chinese slim card without red marks", "chinese slim card with red marks"]
+            },
+            "HOU": {
+                "TPK": ["toothpick", "straight plastic toothpick", "dental floss"],
+                "CTB": ["cotton bud", "wooden cotton bud", "plastic cotton bud"],
+                "PIL": ["pill", "white pill", "yellow pill"],
+                "BAT": ["battery", "small AAA battery", "big AA battery"],
+                "HCP": ["hair clipper", "black hair clipper", "brown hair clipper"],
+                "MNY": ["money bill", "1000 vietnamese dong bill", "5000 vietnamese dong bill"],
+                "COI": ["coin", "5 Australian cents coin", "10 Australian cents coin"],
+                "BOT": ["bottle cap", "beer bottle cap", "plastic bottle cap"],
+                "BBT": ["button", "button with 4 holes", "button with 2 holes"],
+                "ULT": ["plastic utensil", "plastic spoon", "plastic fork"]
+            },
+            "OFF": {
+                "PPN": ["push pin", "normal push pin", "round push pin"],
+                "HST": ["heart sticker", "big heart sticker", "small heart sticker"],
+                "CRS": ["craft stick", "red or orange craft stick", "blue or purple craft stick"],
+                "RUB": ["rubber band", "yellow rubber band", "blue rubber band"],
+                "STN": ["sticky note", "dark green sticky note", "light green sticky note"],
+                "PPC": ["paper clip", "colored paper clip", "silver paper clip"],
+                "PEN": ["pen", "pen with cap", "pen without cap"],
+                "PNC": ["pencil"],
+                "RHS": ["rhinestone", "round rhinestone", "star rhinestone"],
+                "ZPT": ["zip tie", "short zip tie", "long zip tie"],
+                "SFP": ["safety pin", "big safety pin", "small safety pin"],
+                "LPP": ["lapel pin"],
+                "WWO": ["wall wire organizer"]
+            },
+            "OTR": {
+                "SCR": ["screw", "long silver concrete screw", "short bronze screw"],
+                "BOL": ["bolt", "hex head bolt", "mushroom head bolt"],
+                "NUT": ["nut", "hex nut", "square nut"],
+                "WAS": ["washer", "metal washer", "nylon washer"],
+                "BUT": ["button", "Beige button", "Clear button"],
+                "NAI": ["nail", "common nail", "concrete nail"],
+                "BEA": ["bead", "Blue and purple bead", "Orange and pink bead"],
+                "IKC": ["ikea clip", "green ikea clip", "red ikea clip"],
+                "IKE": ["ikea clip", "green ikea clip", "red ikea clip"],
+                "PEG": ["peg", "grey peg", "white peg"],
+                "STO": ["stone", "red stone", "yellowstone"]
+            }
+        }
+        
     def __len__(self):
         return len(self.image_files)
     
@@ -51,10 +123,35 @@ class PairTallyDataset(Dataset):
         neg_gt_count = len(annotation['negative_points'])
         
         # Extract prompts from filename
-        # Format: {positive_class}_{negative_class}_{...}.jpg
+        # Format: {category}_{inter_intra}_{pos_class_code}_{neg_class_code}_{...}.jpg
+        # Example: FOO_INTER_BEA1_SED2_058_038_9d20c4.jpg
         filename_parts = image_name.split('_')
-        pos_class = filename_parts[0].replace('-', ' ')  # Convert "5-cents-coin" to "5 cents coin"
-        neg_class = filename_parts[1].replace('-', ' ')  # Convert "10-cents-coin" to "10 cents coin"
+        category = filename_parts[0]  # FOO, FUN, HOU, OFF, OTR
+        pos_class_code = filename_parts[2]  # e.g., BEA1
+        neg_class_code = filename_parts[3]  # e.g., SED2
+        
+        # Extract base class code (remove the number)
+        pos_base_code = ''.join([c for c in pos_class_code if not c.isdigit()])  # BEA1 -> BEA
+        neg_base_code = ''.join([c for c in neg_class_code if not c.isdigit()])  # SED2 -> SED
+        
+        # Extract variant number
+        pos_variant = int(''.join([c for c in pos_class_code if c.isdigit()])) if any(c.isdigit() for c in pos_class_code) else 1  # BEA1 -> 1
+        neg_variant = int(''.join([c for c in neg_class_code if c.isdigit()])) if any(c.isdigit() for c in neg_class_code) else 1  # SED2 -> 2
+        
+        # Get the text descriptions
+        if category in self.class_mapping and pos_base_code in self.class_mapping[category]:
+            pos_descriptions = self.class_mapping[category][pos_base_code]
+            # Use the variant number to select the specific description (1-indexed)
+            pos_class = pos_descriptions[min(pos_variant - 1, len(pos_descriptions) - 1)]
+        else:
+            pos_class = pos_class_code.lower()  # fallback
+            
+        if category in self.class_mapping and neg_base_code in self.class_mapping[category]:
+            neg_descriptions = self.class_mapping[category][neg_base_code]
+            # Use the variant number to select the specific description (1-indexed)
+            neg_class = neg_descriptions[min(neg_variant - 1, len(neg_descriptions) - 1)]
+        else:
+            neg_class = neg_class_code.lower()  # fallback
         
         # Create specific prompts for this image
         pos_prompt = pos_class
