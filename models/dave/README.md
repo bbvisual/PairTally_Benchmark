@@ -1,6 +1,6 @@
 # DAVE - A Detect-and-Verify Paradigm for Low-Shot Counting
 
-This directory contains the evaluation setup for DAVE (CVPR 2024) on the DICTA25 dataset.
+This directory contains the evaluation setup for DAVE (CVPR 2024) on the PairTally dataset.
 
 ## Original Paper
 **DAVE – A Detect-and-Verify Paradigm for Low-Shot Counting**  
@@ -52,33 +52,49 @@ python -m pip install 'git+https://github.com/facebookresearch/detectron2.git'
 
 ### Files in this Directory
 
-- `evaluate_DICTA25_combined.py` - Main evaluation script for PairTally dataset
-- `evaluate_DICTA25_custom.py` - Custom evaluation with specific configurations
-- `run_combined_eval.sh` - Shell script to run the evaluation
+**Evaluation Scripts:**
+- `evaluate_pairtally_count_both_classes.py` - **Combined evaluation**: 2 positive + 1 negative exemplars, count both classes
+- `evaluate_pairtally_count_one_class.py` - **Single-class evaluation**: Positive exemplars only, count 1 class at a time
+
+**Run Scripts:**
+- `run_count_both_classes.sh` - Shell script for combined evaluation
+- `run_count_one_class.sh` - Shell script for single-class evaluation
+- `run_custom_eval.sh` - Additional evaluation script
 - `README.md` - This file
 
 ### Running Evaluation
 
-1. **Copy evaluation scripts to DAVE directory:**
-```bash
-cp evaluate_DICTA25_*.py /path/to/DAVE/
-cp run_combined_eval.sh /path/to/DAVE/
+DAVE evaluation scripts are ready to run. The scripts automatically use the dataset at `../../dataset/pairtally_dataset/`.
+
+**Dataset Structure Expected:**
+```
+../../dataset/pairtally_dataset/
+├── annotations/
+│   └── pairtally_annotations_simple.json
+└── images/
+    └── [image files]
 ```
 
-2. **Update paths in the evaluation scripts:**
-Edit the scripts to point to your PairTally dataset location:
-```python
-base_data_path = "/path/to/PairTally-Benchmark-Release/dataset"
+**Run Evaluation:**
+
+**Option 1: Combined Mode (Both classes simultaneously)**
+```bash
+./run_count_both_classes.sh
 ```
 
-3. **Configure model paths:**
-Update `utils/argparser.py` to point to your model and dataset paths.
-
-4. **Run evaluation:**
+**Option 2: Single-Class Mode (One class at a time)**
 ```bash
-cd /path/to/DAVE
-conda activate dave
-./run_combined_eval.sh
+./run_count_one_class.sh
+```
+
+**Option 3: Custom Evaluation**
+```bash
+./run_custom_eval.sh
+```
+
+**For Testing (limit to N images):**
+```bash
+./run_count_both_classes.sh --output_limit 10
 ```
 
 ### Evaluation Parameters
@@ -97,65 +113,61 @@ DAVE uses a detect-and-verify paradigm:
 2. **Verification Stage**: False positive removal through similarity verification
 3. **Counting**: Final count based on verified detections
 
+### Evaluation Modes
+
+**Combined Mode** (`run_count_both_classes.sh`):
+- Provides **2 positive exemplars + 1 negative exemplar** per image
+- Asks model to count **both object classes simultaneously**
+- Tests ability to distinguish between different object types in the same scene
+- More challenging as model must handle distractors
+
+**Single-Class Mode** (`run_count_one_class.sh`):
+- Provides **positive exemplars only** for the target class
+- Asks model to count **one class at a time**
+- Simpler task focusing on counting accuracy for a single object type
+- Two separate runs per image (one for each object class)
+
 ### Output Structure
 
-Results are saved to:
+Results are saved to `../../results/` with the following structure:
+
+**Single-Class Mode:**
 ```
-/path/to/results/DAVE-PairTally-Results/
-├── DAVE-quantitative/             # Quantitative metrics
-│   └── annotations/
-│       └── results.json
-└── DAVE-qualitative/              # Qualitative results with visualizations
-    └── annotations/
-        ├── detections/            # Per-image detection results
-        ├── positive_qualitative_data.json
-        ├── negative_qualitative_data.json
-        └── complete_qualitative_data.json
+../../results/DAVE-quantitative/pairtally_dataset/
+├── DAVE_quantitative_results.json
+├── DAVE_quantitative_results.pkl
+└── DAVE_summary.txt
+
+../../results/DAVE-qualitative/pairtally_dataset/
+├── positive_qualitative_data.json
+├── negative_qualitative_data.json
+└── complete_qualitative_data.json
 ```
 
-### Expected Performance
+**Combined Mode:**
+```
+../../results/DAVE-quantitative-combined/pairtally_dataset/
+├── DAVE_combined_quantitative_results.json
+├── DAVE_combined_quantitative_results.pkl
+└── DAVE_combined_summary.txt
 
-DAVE performance on PairTally:
-- **Overall MAE**: X.XX
-- **Overall RMSE**: X.XX  
-- **Best performing category**: HOU (Household)
-- **Most challenging category**: FUN (Fun/Games)
-
-### Key Features Evaluated
-
-1. **Detect-and-verify**: Two-stage counting approach
-2. **Few-shot learning**: Learning from minimal exemplars
-3. **False positive reduction**: Verification stage effectiveness
-4. **Detection quality**: Bounding box accuracy and localization
-
-### Demo Usage
-
-Test DAVE on custom images:
-```bash
-# Few-shot demo
-python demo.py --skip_train --model_name DAVE_3_shot --model_path material \
-    --backbone resnet50 --swav_backbone --reduction 8 --num_enc_layers 3 \
-    --num_dec_layers 3 --kernel_dim 3 --emb_dim 256 --num_objects 3 \
-    --use_query_pos_emb --use_objectness --use_appearance --batch_size 1 --pre_norm
-
-# Zero-shot demo  
-python demo_zero.py --img_path <input-file> --show --zero_shot --two_passes \
-    --skip_train --model_name DAVE_0_shot --model_path material \
-    --backbone resnet50 --swav_backbone --use_objectness --use_appearance --pre_norm
+../../results/DAVE-qualitative-combined/pairtally_dataset/
+└── DAVE_combined_detailed_results.json
 ```
 
 ### Troubleshooting
 
 **Common Issues:**
 1. **Missing detectron2**: Install with pip install 'git+https://github.com/facebookresearch/detectron2.git'
-2. **CUDA compatibility**: Ensure PyTorch CUDA version matches your system
-3. **Model weights**: Verify pre-trained models are in material/ directory
-4. **Path errors**: Update dataset and model paths in configuration files
+2. **Dataset not found**: Verify dataset is at `../../dataset/pairtally_dataset/`
+3. **Model not found**: Ensure DAVE model weights are properly configured
+4. **Environment errors**: Activate dave conda environment
 
 **Performance Tips:**
-- Use `--use_objectness` for better detection quality
-- Enable `--use_appearance` for appearance-based verification
-- Adjust `--num_objects` based on expected object count
+- Use `--output_limit N` for testing on subset of images
+- Check CUDA availability with `echo $CUDA_VISIBLE_DEVICES`
+- Monitor GPU memory usage during evaluation
+- Results are automatically saved to `../../results/`
 
 ### Citation
 

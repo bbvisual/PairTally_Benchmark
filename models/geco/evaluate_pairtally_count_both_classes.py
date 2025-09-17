@@ -93,16 +93,7 @@ class CombinedFSC147Dataset(Dataset):
         # Unpack results (with density_map and gt_bboxes, returns 6 values)
         img_processed, combined_bboxes, _, _, scaling_factor, padwh = result
         
-        # Check if bboxes are too small and need larger image size (like in GeCo evaluation)
-        if (combined_bboxes[:, 2] - combined_bboxes[:, 0]).min() < 25 and (combined_bboxes[:, 3] - combined_bboxes[:, 1]).min() < 25 and not self.zero_shot:
-            result = resize_and_pad(
-                img, combined_exemplars,
-                density_map=dummy_density_map,
-                gt_bboxes=dummy_gt_bboxes,
-                full_stretch=False,
-                size=1536.0
-            )
-            img_processed, combined_bboxes, _, _, scaling_factor, padwh = result
+        # Keep consistent 1024 size - disable adaptive sizing to prevent tensor dimension mismatches
         
         # Apply normalization like GeCo
         img_processed = T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])(img_processed)

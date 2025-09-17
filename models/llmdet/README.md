@@ -25,16 +25,6 @@ This directory contains the environment setup and evaluation notebook for the LL
    python -c "import torch; print(f'PyTorch version: {torch.__version__}'); print(f'CUDA available: {torch.cuda.is_available()}')"
    ```
 
-### Environment Details
-
-The environment (`fg_count`) includes:
-- Python 3.10.18
-- PyTorch 2.3.0 with CUDA 12.1 support
-- Essential ML libraries: transformers, datasets, accelerate, deepspeed
-- Computer vision: opencv-python, pillow, torchvision
-- Data science: pandas, numpy, matplotlib, seaborn
-- Development tools: ipython, jupyter, debugpy
-
 ## Running the Evaluation
 
 After setting up the environment, you can run the LLMDet evaluation:

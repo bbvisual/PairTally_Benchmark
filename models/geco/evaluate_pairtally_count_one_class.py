@@ -99,26 +99,7 @@ class CustomFSC147Dataset(Dataset):
         img_pos, pos_bboxes, _, _, scaling_factor_pos, padwh_pos = result_pos
         img_neg, neg_bboxes, _, _, scaling_factor_neg, padwh_neg = result_neg
         
-        # Check if bboxes are too small and need larger image size (like in GeCo evaluation)
-        if (pos_bboxes[:, 2] - pos_bboxes[:, 0]).min() < 25 and (pos_bboxes[:, 3] - pos_bboxes[:, 1]).min() < 25 and not self.zero_shot:
-            result_pos = resize_and_pad(
-                img, positive_exemplars,
-                density_map=dummy_density_map,
-                gt_bboxes=dummy_gt_bboxes,
-                full_stretch=False,
-                size=1536.0
-            )
-            img_pos, pos_bboxes, _, _, scaling_factor_pos, padwh_pos = result_pos
-        
-        if (neg_bboxes[:, 2] - neg_bboxes[:, 0]).min() < 25 and (neg_bboxes[:, 3] - neg_bboxes[:, 1]).min() < 25 and not self.zero_shot:
-            result_neg = resize_and_pad(
-                img, negative_exemplars,
-                density_map=dummy_density_map,
-                gt_bboxes=dummy_gt_bboxes,
-                full_stretch=False,
-                size=1536.0
-            )
-            img_neg, neg_bboxes, _, _, scaling_factor_neg, padwh_neg = result_neg
+        # Keep consistent 1024 size - disable adaptive sizing to prevent tensor dimension mismatches
         
         # Apply normalization like GeCo
         img_pos = T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])(img_pos)

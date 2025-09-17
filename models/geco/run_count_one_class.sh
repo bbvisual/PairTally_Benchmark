@@ -6,7 +6,7 @@
 echo " Starting GeCo Custom Qualitative Evaluation (Positive/Negative Exemplars) on FINAL DATASET..."
 
 # Default settings
-MODEL_PATH="GeCo/MODEL_folder"
+MODEL_PATH="GeCo/pretrained_models"
 MODEL_NAME="GeCo_updated"
 BASE_DATA_PATH="../../dataset/pairtally_dataset"
 OUTPUT_LIMIT=""

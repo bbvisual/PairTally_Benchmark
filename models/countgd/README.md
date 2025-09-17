@@ -1,6 +1,6 @@
 # CountGD - Multi-Modal Open-World Counting
 
-This directory contains the evaluation setup for CountGD (NeurIPS 2024) on the DICTA25 dataset.
+This directory contains the evaluation setup for CountGD (NeurIPS 2024) on the PairTally dataset.
 
 ## Original Paper
 **CountGD: Multi-Modal Open-World Counting**  
@@ -62,125 +62,132 @@ gdown 1RbRcNLsOfeEbx6u39pBehqsgQiexHHrI
 ### Files in this Directory
 
 **Evaluation Scripts:**
-- `evaluate_DICTA25_combined.py` - **Combined evaluation**: 2 positive + 1 negative exemplars, count both classes
-- `evaluate_DICTA25_custom.py` - **Custom evaluation**: Positive exemplars only, count 1 class at a time
-- `evaluate_DICTA25_text_only.py` - Text-only evaluation (no exemplar boxes)
-- `evaluate_DICTA25_combined_text_only.py` - Combined text-only evaluation
+- `evaluate_pairtally_count_both_classes.py` - **Combined evaluation**: 2 positive + 1 negative exemplars, count both classes
+- `evaluate_pairtally_count_one_class.py` - **Single-class evaluation**: Positive exemplars only, count 1 class at a time
+- `evaluate_pairtally_count_both_classes_text_only.py` - Combined text-only evaluation (no exemplar boxes)
+- `evaluate_pairtally_count_one_class_text_only.py` - Single-class text-only evaluation
 
 **Run Scripts:**
-- `run_combined_eval.sh` - Shell script for combined evaluation
-- `run_custom_eval.sh` - Shell script for custom evaluation  
-- `run_custom_eval_text_only.sh` - Shell script for text-only custom evaluation
+- `run_count_both_classes.sh` - Shell script for combined evaluation
+- `run_count_one_class.sh` - Shell script for single-class evaluation  
+- `run_count_both_classes_text_only.sh` - Shell script for combined text-only evaluation
+- `run_count_one_class_text_only.sh` - Shell script for single-class text-only evaluation
+- `SETUP.md` - Detailed setup instructions
 - `README.md` - This file
 
 ### Evaluation Modes
 
-**Combined Mode** (`evaluate_DICTA25_combined.py`):
+**Combined Mode** (`run_count_both_classes.sh`):
 - Provides **2 positive exemplars + 1 negative exemplar** per image
+- Uses combined text prompt: "positive_class and negative_class"
 - Asks model to count **both object classes simultaneously**
 - Tests ability to distinguish between different object types in the same scene
 - More challenging as model must handle distractors
 
-** Custom Mode** (`evaluate_DICTA25_custom.py`):
+**Single-Class Mode** (`run_count_one_class.sh`):
 - Provides **positive exemplars only** for the target class
+- Uses separate text prompts for each class
 - Asks model to count **one class at a time**
 - Simpler task focusing on counting accuracy for a single object type
 - Two separate runs per image (one for each object class)
 
+**Text-Only Modes** (`run_count_*_text_only.sh`):
+- Same as above modes but **without visual exemplar boxes**
+- Uses only text descriptions for object identification
+- Tests pure language-based counting capability
+
 ### Running Evaluation
 
-1. **Copy evaluation scripts to CountGD directory:**
-```bash
-cp evaluate_DICTA25_*.py /path/to/CountGD/
-cp run_combined_eval.sh /path/to/CountGD/
+All evaluation scripts are ready to run. The scripts automatically use the dataset at `../../dataset/pairtally_dataset/`.
+
+**Dataset Structure Expected:**
+```
+../../dataset/pairtally_dataset/
+├── annotations/
+│   └── pairtally_annotations_simple.json
+└── images/
+    └── [image files]
 ```
 
-2. **Update paths in the evaluation scripts:**
-Edit the scripts to point to your PairTally dataset location:
-```python
-base_data_path = "/path/to/PairTally-Benchmark-Release/dataset"
-# The script will use: base_data_path/pairtally_dataset/
+**Run Evaluation:**
+
+**Option 1: Combined Mode (Both classes simultaneously)**
+```bash
+./run_count_both_classes.sh
 ```
 
-**Important**: The evaluation scripts expect the FSC147-compatible format in `dataset/pairtally_dataset/`:
-- Annotations: `dataset/pairtally_dataset/annotations/pairtally_annotations.json`
-- Images: `dataset/pairtally_dataset/images/`
-
-3. **Run evaluation:**
-
-**Option A: Combined Mode (Recommended for paper results)**
+**Option 2: Single-Class Mode (One class at a time)**
 ```bash
-cd /path/to/CountGD
-conda activate countgd
-./run_combined_eval.sh
+./run_count_one_class.sh
 ```
 
-**Option B: Custom Mode (Single-class counting)**
+**Option 3: Combined Text-Only Mode**
 ```bash
-cd /path/to/CountGD
-conda activate countgd
-./run_custom_eval.sh
+./run_count_both_classes_text_only.sh
 ```
 
-**Option C: Text-Only Custom Mode**
+**Option 4: Single-Class Text-Only Mode**
 ```bash
-cd /path/to/CountGD
-conda activate countgd
-./run_custom_eval_text_only.sh
+./run_count_one_class_text_only.sh
+```
+
+**For Testing (limit to N images):**
+```bash
+./run_count_both_classes.sh --output_limit 10
 ```
 
 ### Evaluation Parameters
 
 The evaluation uses the following key parameters:
-- **Text + Visual mode**: Both text descriptions and visual exemplars
-- **SAM test-time normalization**: Enabled for better accuracy
-- **Confidence threshold**: 0.3 (default)
-- **Crop mode**: Enabled for better object localization
-- **Remove bad exemplars**: Enabled
+- **Model**: FSC147 pretrained checkpoint (`checkpoint_fsc147_best.pth`)
+- **Configuration**: `cfg_fsc147_vit_b.py`
+- **Confidence threshold**: 0.23 (single-class), 0.3 (combined)
+- **Text + Visual mode**: Both text descriptions and visual exemplars (default)
+- **Text-only mode**: Available via `*_text_only.sh` scripts
+- **Device**: CUDA (configurable via `CUDA_VISIBLE_DEVICES`)
 
 ### Output Structure
 
-Results are saved to:
+Results are saved to `../../results/` with the following structure:
+
+**Single-Class Mode:**
 ```
-/path/to/results/CountGD-PairTally-Results/
-├── CountGD-quantitative/          # Quantitative metrics
-│   └── annotations/
-│       └── results.json
-└── CountGD-qualitative/           # Qualitative results with visualizations
-    └── annotations/
-        ├── detections/            # Per-image detection results
-        ├── positive_qualitative_data.json
-        ├── negative_qualitative_data.json
-        └── complete_qualitative_data.json
+../../results/CountGD-quantitative/pairtally_dataset/
+├── CountGD_quantitative_results.json
+├── CountGD_quantitative_results.pkl
+└── CountGD_summary.txt
+
+../../results/CountGD-qualitative/pairtally_dataset/
+├── positive_qualitative_data.json
+├── negative_qualitative_data.json
+└── complete_qualitative_data.json
 ```
 
-### Expected Performance
+**Combined Mode:**
+```
+../../results/CountGD-count-both-classes-quantitative/pairtally_dataset/
+├── CountGD-Combined_quantitative_results.json
+├── CountGD-Combined_quantitative_results.pkl
+└── CountGD-Combined_summary.txt
 
-CountGD performance on PairTally:
-- **Overall MAE**: X.XX
-- **Overall RMSE**: X.XX
-- **Best performing category**: FOO (Food)
-- **Most challenging category**: OTR (Other)
+../../results/CountGD-count-both-classes-qualitative/pairtally_dataset/
+└── CountGD-Combined_detailed_results.json
+```
 
-### Key Features Evaluated
-
-1. **Multi-modal counting**: Text + visual exemplars
-2. **Open-world capability**: Counting novel object classes
-3. **Fine-grained distinction**: INTRA-class attribute differences
-4. **Robustness**: Performance across different object categories
 
 ### Troubleshooting
 
 **Common Issues:**
-1. **CUDA out of memory**: Reduce batch size in evaluation script
-2. **GroundingDINO compilation errors**: Ensure GCC 11+ is installed
-3. **Missing weights**: Verify all checkpoint files are downloaded
-4. **Path errors**: Update all dataset paths in evaluation scripts
+1. **CUDA out of memory**: Reduce batch size or use smaller confidence threshold
+2. **Dataset not found**: Verify dataset is at `../../dataset/pairtally_dataset/`
+3. **Model not found**: Ensure `CountGD/checkpoints/checkpoint_fsc147_best.pth` exists
+4. **Environment errors**: Activate countgd conda environment
 
 **Performance Tips:**
-- Use `--sam_tt_norm` for better accuracy (slower)
-- Increase batch size for faster evaluation (if memory allows)
-- Use `--crop` for better object localization
+- Use `--output_limit N` for testing on subset of images
+- Check CUDA availability with `echo $CUDA_VISIBLE_DEVICES`
+- Monitor GPU memory usage during evaluation
+- Results are automatically saved to `../../results/`
 
 ### Citation
 

@@ -36,154 +36,118 @@ python -m pip install 'git+https://github.com/facebookresearch/detectron2.git'
 # Download pretrained weights from:
 # https://drive.google.com/file/d/1wjOF9MWkrVJVo5uG3gVqZEW9pwRq_aIk/view?usp=sharing
 
-# Place in MODEL_folder/
-mkdir -p MODEL_folder
-# Download and place: MODEL_folder/model_weights.pth
+# Place in pretrained_models/
+mkdir -p pretrained_models
+# Download and place: pretrained_models/model_weights.pth
 ```
 
-### 4. Download FSC147 Dataset (for training data)
-```bash
-# Download FSC147 dataset from:
-# https://drive.google.com/file/d/1ymDYrGs9DSRicfZbSCDiOu0ikGDh5k6S/view?usp=sharing
-# Place in DATA_folder/
-
-# Download box annotations from:
-# https://drive.google.com/drive/folders/1Jvr2Bu2cD_yn4W_DjKIW6YjdAiUsw_WA
-# Place in DATA_folder/annotations/
-
-# Generate density maps
-python utils/data.py --data_path DATA_folder
-```
-
-## DICTA25 Evaluation
+## PairTally Evaluation
 
 ### Files in this Directory
 
-- `evaluate_DICTA25_combined.py` - Main evaluation script for DICTA25 dataset
-- `run_combined_eval.sh` - Shell script to run the evaluation
+**Evaluation Scripts:**
+- `evaluate_pairtally_count_both_classes.py` - **Combined evaluation**: 2 positive + 1 negative exemplars, count both classes
+- `evaluate_pairtally_count_one_class.py` - **Single-class evaluation**: Positive exemplars only, count 1 class at a time
+
+**Run Scripts:**
+- `run_count_both_classes.sh` - Shell script for combined evaluation
+- `run_count_one_class.sh` - Shell script for single-class evaluation
 - `README.md` - This file
 
 ### Running Evaluation
 
-1. **Copy evaluation scripts to GeCo directory:**
+GeCo is already set up in this directory. The scripts automatically use the dataset at `../../dataset/pairtally_dataset/`.
+
+**Dataset Structure Expected:**
+```
+../../dataset/pairtally_dataset/
+├── annotations/
+│   └── pairtally_annotations_simple.json
+└── images/
+    └── [image files]
+```
+
+**Run Evaluation:**
+
+**Option 1: Combined Mode (Both classes simultaneously)**
 ```bash
-cp evaluate_DICTA25_combined.py /path/to/GeCo/
-cp run_combined_eval.sh /path/to/GeCo/
+./run_count_both_classes.sh
 ```
 
-2. **Update paths in the evaluation scripts:**
-Edit the scripts to point to your DICTA25 dataset location:
-```python
-base_data_path = "/path/to/DICTA25-Can-AI-Models-Count-Release/dataset"
-```
-
-3. **Run evaluation:**
+**Option 2: Single-Class Mode (One class at a time)**
 ```bash
-cd /path/to/GeCo
-conda activate geco_test
-./run_combined_eval.sh
+./run_count_one_class.sh
 ```
 
-### Model Architecture
-
-GeCo features a unified architecture that combines:
-1. **Dense Object Queries**: Robust prototype generalization across object appearances
-2. **Detection Branch**: Object localization with bounding boxes
-3. **Segmentation Branch**: Precise object segmentation masks
-4. **Counting Loss**: Direct optimization of the detection task
-
-### Quick Demo
-
-Test GeCo on a single image:
+**For Testing (limit to N images):**
 ```bash
-# Run demo with mask output
-python demo.py --image_path ./material/4.jpg --output_masks
+./run_count_both_classes.sh --output_limit 10
 ```
 
-### Evaluation on FSC147
+### Evaluation Modes
 
-For comparison with other methods:
-```bash
-# Run inference on FSC147
-python evaluate.py --data_path DATA_folder --model_path MODEL_folder
+**Combined Mode** (`run_count_both_classes.sh`):
+- Provides **2 positive exemplars + 1 negative exemplar** per image
+- Asks model to count **both object classes simultaneously**
+- Tests ability to distinguish between different object types in the same scene
+- More challenging as model must handle distractors
 
-# Evaluate bounding boxes
-python evaluate_bboxes.py --data_path DATA_folder
-```
+**Single-Class Mode** (`run_count_one_class.sh`):
+- Provides **positive exemplars only** for the target class
+- Asks model to count **one class at a time**
+- Simpler task focusing on counting accuracy for a single object type
+- Two separate runs per image (one for each object class)
+
+### Evaluation Parameters
+
+The evaluation uses the following key parameters:
+- **Model**: GeCo pretrained weights (`pretrained_models/model_weights.pth`)
+- **Image Size**: 1024x1024
+- **Device**: CUDA (configurable via `CUDA_VISIBLE_DEVICES`)
+- **Exemplar-based counting**: Visual exemplar boxes for object identification
 
 ### Output Structure
 
-Results are saved to:
+Results are saved to `../../results/` with the following structure:
+
+**Single-Class Mode:**
 ```
-/path/to/results/GeCo-DICTA25-Results/
-├── GeCo-quantitative/             # Quantitative metrics
-│   └── annotations/
-│       └── results.json
-└── GeCo-qualitative/              # Qualitative results with visualizations
-    └── annotations/
-        ├── detections/            # Per-image detection results
-        ├── masks/                 # Segmentation masks (if enabled)
-        ├── positive_qualitative_data.json
-        ├── negative_qualitative_data.json
-        └── complete_qualitative_data.json
-```
+../../results/GeCo-quantitative/pairtally_dataset/
+├── GeCo_updated_quantitative_results.json
+├── GeCo_updated_quantitative_results.pkl
+└── GeCo_updated_summary.txt
 
-### Expected Performance
-
-GeCo performance on DICTA25:
-- **Overall MAE**: X.XX
-- **Overall RMSE**: X.XX
-- **Best performing category**: OFF (Office)
-- **Most challenging category**: FOO (Food)
-
-### Key Features Evaluated
-
-1. **Unified architecture**: Joint detection, segmentation, and counting
-2. **Dense object queries**: Robust prototype formulation
-3. **Direct counting loss**: Optimized for detection task
-4. **Segmentation capability**: Precise object boundaries
-5. **Low-shot learning**: Few-shot and zero-shot counting
-
-### Training (Optional)
-
-To train GeCo from scratch:
-
-1. **Download additional data:**
-```bash
-# Download train split box annotations
-# https://drive.google.com/file/d/15_qpEZ7f0ZBrcTmgFnxx71lCdxAGtuTz/view?usp=sharing
-
-# Download SAM-HQ weights
-# https://drive.google.com/file/d/1qobFYrI4eyIANfBSmYcGuWRaSIXfMOQ8/view?usp=sharing
+../../results/GeCo-qualitative/pairtally_dataset/
+├── positive_qualitative_data.json
+├── negative_qualitative_data.json
+└── complete_qualitative_data.json
 ```
 
-2. **Generate density maps:**
-```bash
-python utils/data.py
+**Combined Mode:**
+```
+../../results/GeCo-quantitative-combined/pairtally_dataset/
+├── GeCo_updated_combined_quantitative_results.json
+├── GeCo_updated_combined_quantitative_results.pkl
+└── GeCo_updated_combined_summary.txt
+
+../../results/GeCo-qualitative-combined/pairtally_dataset/
+└── GeCo_updated_combined_detailed_results.json
 ```
 
-3. **Run pretraining:**
-```bash
-sbatch pretrain.sh
-```
-
-4. **Run main training:**
-```bash
-sbatch train.sh
-```
 
 ### Troubleshooting
 
 **Common Issues:**
-1. **Missing detectron2**: Install with the provided pip command
-2. **CUDA compatibility**: Ensure PyTorch CUDA version matches system
-3. **Missing weights**: Verify model weights are downloaded and placed correctly
-4. **Data format**: Ensure FSC147 data is properly formatted and density maps generated
+1. **CUDA out of memory**: Reduce image size or batch processing
+2. **Dataset not found**: Verify dataset is at `../../dataset/pairtally_dataset/`
+3. **Model not found**: Ensure `pretrained_models/model_weights.pth` exists
+4. **Environment errors**: Activate geco_test conda environment
 
 **Performance Tips:**
-- Use `--output_masks` for segmentation visualization
-- Adjust batch size based on GPU memory
-- Use multiple GPUs for faster training (if available)
+- Use `--output_limit N` for testing on subset of images
+- Check CUDA availability with `echo $CUDA_VISIBLE_DEVICES`
+- Monitor GPU memory usage during evaluation
+- Results are automatically saved to `../../results/`
 
 ### Citation
 
