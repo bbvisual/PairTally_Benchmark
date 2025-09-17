@@ -292,11 +292,11 @@ This dataset is released under the [CC BY 4.0](https://creativecommons.org/licen
 **Gia Khanh Nguyen**  
 Australian Institute for Machine Learning  
 University of Adelaide  
-Email: giakhanh.nguyen@adelaide.edu.au
+Email: giakhanh.nguyen01@adelaide.edu.au
 
 ## Acknowledgments
 
-We thank the Australian Institute for Machine Learning and Stony Brook University for supporting this research. Special thanks to all contributors who helped with data collection and annotation.
+We thank the Australian Institute for Machine Learning (University of Adelaide) and the Centre for Augmented Reasoning for supporting this research. Special thanks to Viet Bach Tran and all contributors who helped with data collection and annotation.
 
 ---
 
