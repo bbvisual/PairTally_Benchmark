@@ -12,12 +12,6 @@
 </p>
 
 <p align="center">
-  <a href="https://arxiv.org/abs/2509.13939">
-    <img src="https://img.shields.io/badge/arXiv-2509.13939-b31b1b.svg" alt="arXiv link">
-  </a>
-</p>
-
-<p align="center">
   <a href="https://arxiv.org/abs/2509.13939">Paper</a> •
   <a href="#installation">Installation</a> •
   <a href="#dataset">Dataset</a> •
