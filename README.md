@@ -12,7 +12,13 @@
 </p>
 
 <p align="center">
-  <a href="#citation">Paper</a> •
+  <a href="https://arxiv.org/abs/2509.13939">
+    <img src="https://img.shields.io/badge/arXiv-2509.13939-b31b1b.svg" alt="arXiv link">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://arxiv.org/abs/2509.13939">Paper</a> •
   <a href="#installation">Installation</a> •
   <a href="#dataset">Dataset</a> •
   <a href="#evaluation">Evaluation</a> •
@@ -302,6 +308,7 @@ We thank the Australian Institute for Machine Learning (University of Adelaide) 
 
 <p align="center">
   <a href="https://github.com/bbvisual/PairTally_Benchmark">GitHub</a> •
-  <a href="#citation">Paper</a> •
+  <a href="https://arxiv.org/abs/2509.13939">Paper</a> •
   <a href="https://drive.google.com/file/d/1TnenXS4yFicjo81NnmClfzgc8ltmmeBv/view">Dataset</a>
 </p>
+
