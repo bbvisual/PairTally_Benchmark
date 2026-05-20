@@ -11,6 +11,8 @@ CVPR 2026
 ## Setup Instructions
 
 ## 1. Clone Original Repository
+- Note: rename this README.md to save these instructions, as they will be overwritten with the ones in the CountGD++ repository by the mv command
+- Alternatively, just copy over everything but the CountGD++ README.md
 ```bash
 # Clone the official CountGD++ repository
 git clone https://github.com/niki-amini-naieni/CountGDPlusPlus.git
