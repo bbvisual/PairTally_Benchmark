@@ -10,7 +10,15 @@ CVPR 2026
 
 ## Setup Instructions
 
-### 1. Environment Setup
+## 1. Clone Original Repository
+```bash
+# Clone the official CountGD++ repository
+git clone https://github.com/niki-amini-naieni/CountGDPlusPlus.git
+mv CountGDPlusPlus/* .
+rm -rf CountGDPlusPlus
+```
+
+### 2. Environment Setup
 ```bash
 conda create -n countgdplusplus python=3.10
 conda activate countgdplusplus
