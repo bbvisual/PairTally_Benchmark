@@ -137,13 +137,14 @@ The evaluation scripts for all models from the paper are available in the `model
 
 ```
 models/
-├── countgd/         # CountGD - Multi-Modal Open-World Counting
-├── dave/            # DAVE - Detect-and-Verify Paradigm  
-├── geco/            # GeCo - Unified Architecture for Low-Shot Counting
-├── loca/            # LoCA - Learning to Count Everything
-├── learningtocount/ # FamNet - Learning to Count Everything  
-├── llmdet/          # LLMDET
-└── vlms/            # Vision-Language Models (Qwen2.5-VL, LLaMA-3.2, InternVL3, Ovis2)
+├── countgd/          # CountGD - Multi-Modal Open-World Counting
+├── countgd_plusplus/ # CountGD++ - Generalized Prompting for Open-World Counting
+├── dave/             # DAVE - Detect-and-Verify Paradigm  
+├── geco/             # GeCo - Unified Architecture for Low-Shot Counting
+├── loca/             # LoCA - Learning to Count Everything
+├── learningtocount/  # FamNet - Learning to Count Everything  
+├── llmdet/           # LLMDET
+└── vlms/             # Vision-Language Models (Qwen2.5-VL, LLaMA-3.2, InternVL3, Ovis2)
 ```
 
 **Quick Setup:**
@@ -226,6 +227,8 @@ See `CUSTOM_MODEL_EVALUATION_TEMPLATE.md` for detailed instructions and examples
 | FamNet | b.boxes | 75.83 | 88.30 | 90.60 | 51.57 | 73.1 | 55.7 |
 | CountGD | both | 46.67 | 57.33 | 52.88 | 10.58 | 83.1 | 57.3 |
 | CountGD (Text) | text | 50.32 | 57.33 | 93.99 | 42.83 | 52.0 | 32.9 |
+| CountGD++ | both, + prompts | 46.41 | - | - | - | - | - |
+| CountGD++ | both, +/- prompts | 35.27 | - | - | - | - | - |
 | LLMDet | text | 77.23 | 107.84 | 121.82 | 45.49 | 53.3 | 41.4 |
 | Ovis2 | text | 65.15 | 111.56 | 145.37 | 35.69 | 5.0 | 0.3 |
 | Qwen2.5-VL | text | 59.36 | 99.88 | 126.88 | 43.62 | 26.1 | 10.7 |
